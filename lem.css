@@ -1,7 +1,10 @@
 body {
+    color:white;
+    background-color: #1a1a1a;
     margin: 0;
     font-family: sans-serif;
 }
+
 
 .cover {
     width: 100%;
@@ -16,14 +19,44 @@ body {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 5px solid white;
-
+    border: 5px solid #1a1a1a;
     position: absolute;
     bottom: -60px;
     left: 30px;
 }
 
-.profile-info {
+.text {
     margin-top: 70px;
     padding-left: 30px;
+
+}
+
+
+.profile-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+.photo-box {
+    width: 980px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.photo-box:hover img {
+    transform: scale(1.1);
 }
