@@ -14,6 +14,20 @@ body {
     position: relative;
 }
 
+.cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.72) 0%,
+        rgba(0, 0, 0, 0.3) 35%,
+        rgba(0, 0, 0, 0.12) 60%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    pointer-events: none;
+}
+
 .avatar {
     width: clamp(88px, 18vw, 140px);
     height: clamp(88px, 18vw, 140px);
@@ -22,14 +36,16 @@ body {
     position: absolute;
     left: clamp(18px, 5vw, 48px);
     bottom: calc(clamp(88px, 18vw, 140px) / -2);
+    z-index: 1;
 }
 
 .profile-info {
     margin-top: calc(clamp(88px, 18vw, 140px) / 2 + 24px);
     padding-inline: clamp(18px, 5vw, 48px);
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .text {
@@ -148,11 +164,17 @@ body {
 
 @media (min-width: 768px) {
     .profile-info {
-        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-        align-items: start;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .text {
+        flex: 1 1 auto;
     }
 
     .contact {
+        flex: 0 0 auto;
         text-align: right;
     }
 
