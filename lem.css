@@ -1,85 +1,53 @@
-/* 小螢幕 (寬度小於 768px) */
-@media (max-width: 768px) {
-    body {
-        background-color: #2c2522;
-        font-size: 1rem;
-    }
-
-    .card h3 {
-        margin: 0;
-        padding: 0;
-        font-size: 1.2rem;
-        font-weight: 500;
-        text-align: center;
-    }
-}
-
-/* 大螢幕 (寬度大於 768px) */
-@media (min-width: 769px) {
-    body {
-        background-color: #1a1a1a;
-        font-size: 3rem;
-    }
-
-    .card h3 {
-        margin: 0;
-        padding: 0;
-        font-size: 1.2px;
-        font-weight: 500;
-        text-align: center;
-    }
-}
-
-
 body {
-    color: white;
     margin: 0;
+    color: white;
+    background-color: #1a1a1a;
     font-family: sans-serif;
 }
 
 .cover {
     width: 100%;
-    height: 250px;
+    height: clamp(180px, 34vw, 320px);
     background-image: url("https://scontent.frmq4-2.fna.fbcdn.net/v/t39.30808-6/488220431_600699739680774_1302792377442457419_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=48udMiQs-moQ7kNvwELnu7O&_nc_oc=AdrVhmQ-OY1lH0QqlOgZJzN_L-SnmjXv-e-rtCMXipVxiohPDWXDUaz4LlpMBykqQ6FOvjRpUbxSizvWB9sxFIFj&_nc_zt=23&_nc_ht=scontent.frmq4-2.fna&_nc_gid=rJOlddrWG7cgkPd-GfyHbg&_nc_ss=7a3a8&oh=00_Af2dUEwkBXSppdOvfOsHEP7qkpPafHCUd_Wm91Q8VQZOSA&oe=69E6715E");
-    background-size: cover;
     background-position: center;
+    background-size: cover;
     position: relative;
 }
 
 .avatar {
-    width: 120px;
-    height: 120px;
+    width: clamp(88px, 18vw, 140px);
+    height: clamp(88px, 18vw, 140px);
     border-radius: 50%;
     border: 5px solid #1a1a1a;
     position: absolute;
-    bottom: -60px;
-    left: 30px;
+    left: clamp(18px, 5vw, 48px);
+    bottom: calc(clamp(88px, 18vw, 140px) / -2);
 }
 
 .text {
-    margin-top: 70px;
-    padding-left: 30px;
+    margin-top: calc(clamp(88px, 18vw, 140px) / 2 + 24px);
+    padding-inline: clamp(18px, 5vw, 48px);
 }
 
 .text h2 {
-    font-size: 32px;
+    margin: 0 0 12px;
+    font-size: clamp(1.75rem, 4vw, 2.2rem);
 }
 
 .text p {
-    font-size: 18px;
+    margin: 0;
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
     line-height: 1.6;
 }
 
 .photo-box {
-    width: 980px;
-    height: 300px;
-    margin-left: 30px;
-    margin-top: 20px;
+    width: min(calc(100% - 36px), 980px);
+    height: clamp(220px, 42vw, 300px);
+    margin: 24px clamp(18px, 5vw, 48px) 0;
     position: relative;
     overflow: hidden;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
 }
 
 .photo-box img {
@@ -98,11 +66,10 @@ body {
 
 .overlay-text {
     position: absolute;
-    bottom: 30px;
-    left: 40px;
-
+    left: clamp(20px, 4vw, 40px);
+    bottom: clamp(18px, 4vw, 30px);
     color: white;
-    font-size: 48px;
+    font-size: clamp(2rem, 7vw, 3rem);
     font-weight: bold;
     text-shadow:
         0 3px 6px rgba(0, 0, 0, 0.85),
@@ -115,4 +82,15 @@ body {
 .photo-box:hover .overlay-text {
     transform: translateY(28px);
     opacity: 0;
+}
+
+@media (min-width: 768px) {
+    .text {
+        max-width: 720px;
+    }
+
+    .photo-box {
+        width: min(calc(100% - 96px), 980px);
+        margin-top: 32px;
+    }
 }
