@@ -24,9 +24,16 @@ body {
     bottom: calc(clamp(88px, 18vw, 140px) / -2);
 }
 
-.text {
+.profile-info {
     margin-top: calc(clamp(88px, 18vw, 140px) / 2 + 24px);
     padding-inline: clamp(18px, 5vw, 48px);
+    display: grid;
+    gap: 20px;
+    align-items: start;
+}
+
+.text {
+    min-width: 0;
 }
 
 .text h2 {
@@ -40,10 +47,32 @@ body {
     line-height: 1.6;
 }
 
+.contact {
+    min-width: 0;
+    text-align: left;
+}
+
+.contact p {
+    margin: 0;
+    font-size: clamp(0.95rem, 2.3vw, 1.05rem);
+    line-height: 1.7;
+}
+
+.contact p + p {
+    margin-top: 8px;
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(18px, 3vw, 28px);
+    padding: 24px clamp(18px, 5vw, 48px) 0;
+}
+
 .photo-box {
-    width: min(calc(100% - 36px), 980px);
-    height: clamp(220px, 42vw, 300px);
-    margin: 24px clamp(18px, 5vw, 48px) 0;
+    width: 100%;
+    min-height: 220px;
+    aspect-ratio: 16 / 9;
     position: relative;
     overflow: hidden;
     border-radius: 15px;
@@ -118,12 +147,26 @@ body {
 }
 
 @media (min-width: 768px) {
-    .text {
-        max-width: 720px;
+    .profile-info {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        align-items: start;
     }
 
-    .photo-box {
-        width: min(calc(100% - 96px), 980px);
-        margin-top: 32px;
+    .contact {
+        text-align: right;
     }
+
+    .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding-top: 32px;
+    }
+}
+
+a {
+    color: rgb(152, 152, 152);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
