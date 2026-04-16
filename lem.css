@@ -1,8 +1,20 @@
+:root {
+    --page-padding: clamp(18px, 5vw, 48px);
+    --avatar-size: clamp(88px, 18vw, 140px);
+    --text-shadow:
+        0 3px 6px rgba(0, 0, 0, 0.85),
+        0 8px 18px rgba(0, 0, 0, 0.55);
+}
+
 body {
     margin: 0;
     color: white;
     background-color: #1a1a1a;
     font-family: sans-serif;
+}
+
+main {
+    padding-bottom: 32px;
 }
 
 .cover {
@@ -29,19 +41,19 @@ body {
 }
 
 .avatar {
-    width: clamp(88px, 18vw, 140px);
-    height: clamp(88px, 18vw, 140px);
+    width: var(--avatar-size);
+    height: var(--avatar-size);
     border-radius: 50%;
     border: 5px solid #1a1a1a;
     position: absolute;
-    left: clamp(18px, 5vw, 48px);
-    bottom: calc(clamp(88px, 18vw, 140px) / -2);
+    left: var(--page-padding);
+    bottom: calc(var(--avatar-size) / -2);
     z-index: 1;
 }
 
 .profile-info {
-    margin-top: calc(clamp(88px, 18vw, 140px) / 2 + 24px);
-    padding-inline: clamp(18px, 5vw, 48px);
+    margin-top: calc(var(--avatar-size) / 2 + 24px);
+    padding-inline: var(--page-padding);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -82,7 +94,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: clamp(18px, 3vw, 28px);
-    padding: 24px clamp(18px, 5vw, 48px) 0;
+    padding: 24px var(--page-padding) 0;
 }
 
 .photo-box {
@@ -116,9 +128,7 @@ body {
     color: white;
     font-size: clamp(2rem, 7vw, 3rem);
     font-weight: bold;
-    text-shadow:
-        0 3px 6px rgba(0, 0, 0, 0.85),
-        0 8px 18px rgba(0, 0, 0, 0.55);
+    text-shadow: var(--text-shadow);
     transform: translateY(0);
     opacity: 1;
     transition: transform 0.45s ease, opacity 0.45s ease;
@@ -184,11 +194,11 @@ body {
     }
 }
 
-a {
+.contact a {
     color: rgb(152, 152, 152);
     text-decoration: none;
 }
 
-a:hover {
+.contact a:hover {
     text-decoration: underline;
 }
