@@ -20,7 +20,7 @@ main {
 .cover {
     width: 100%;
     height: clamp(180px, 34vw, 320px);
-    background-image: url("https://scontent.frmq4-2.fna.fbcdn.net/v/t39.30808-6/488220431_600699739680774_1302792377442457419_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=100&ccb=1-7&_nc_sid=2a1932&_nc_ohc=48udMiQs-moQ7kNvwELnu7O&_nc_oc=AdrVhmQ-OY1lH0QqlOgZJzN_L-SnmjXv-e-rtCMXipVxiohPDWXDUaz4LlpMBykqQ6FOvjRpUbxSizvWB9sxFIFj&_nc_zt=23&_nc_ht=scontent.frmq4-2.fna&_nc_gid=rJOlddrWG7cgkPd-GfyHbg&_nc_ss=7a3a8&oh=00_Af2dUEwkBXSppdOvfOsHEP7qkpPafHCUd_Wm91Q8VQZOSA&oe=69E6715E");
+    background-image: url("img/488220431_600699739680774_1302792377442457419_n.jpg");
     background-position: center;
     background-size: cover;
     position: relative;
