@@ -7,13 +7,36 @@
     <link rel="stylesheet" href="lem.css">
 </head>
 <body>
-    <div class="cover">
-        <img class="avatar" src="img/473621430_540659945684754_1066428941111761265_n.jpg" alt="稀蝸大頭照">
+    <nav class="navbar" aria-label="主要導覽">
+        <a class="nav-logo" href="#home">稀蝸</a>
+        <div class="nav-links">
+            <a href="#home">主頁</a>
+            <a href="#original">原創</a>
+            <a href="#commission">關於委託</a>
+            <a href="#contact">聯絡我</a>
+        </div>
+    </nav>
+
+    <div class="cover" id="home">
+        <div class="carousel" aria-label="作品圖片輪播">
+            <img class="carousel-slide is-active" src="img/488220431_600699739680774_1302792377442457419_n.jpg" alt="輪播作品 1">
+            <img class="carousel-slide" src="img/657746246_893992547018157_3363821962379930125_n.jpg" alt="輪播作品 2">
+            <img class="carousel-slide" src="img/617728312_833207739763305_4519504809564729019_n.jpg" alt="輪播作品 3">
+            <img class="carousel-slide" src="img/626609219_847426198341459_2977584444697287267_n.jpg" alt="輪播作品 4">
+
+            <button class="carousel-button carousel-button-prev" type="button" aria-label="上一張圖片">
+                <span aria-hidden="true">&#8249;</span>
+            </button>
+            <button class="carousel-button carousel-button-next" type="button" aria-label="下一張圖片">
+                <span aria-hidden="true">&#8250;</span>
+            </button>
+        </div>
     </div>
 
+    <img class="avatar" src="img/473621430_540659945684754_1066428941111761265_n.jpg" alt="稀蝸大頭照">
 
     <main>
-        <section class="profile-info">
+        <section class="profile-info" id="commission">
             <div class="text">
                 <h2>稀蝸</h2>
                 <p>一隻稀有的蝸牛
@@ -24,7 +47,7 @@
                 </p>
             </div>
 
-            <div class="contact">
+            <div class="contact" id="contact">
                 <p>電子郵件地址：potatoisgoodpapa@gmail.com</p>
                 <p>
                     <a href="https://www.facebook.com/cgouo.pa/?rdid=EVFegre5W4eUPr10">Facebook</a>、
@@ -37,7 +60,7 @@
         </section>
 
 
-        <section class="photo-grid">
+        <section class="photo-grid" id="original">
             <article class="photo-box">
                 <img src="img/657746246_893992547018157_3363821962379930125_n.jpg" alt="包天">
                 <div class="overlay-text">包天</div>
@@ -75,5 +98,25 @@
             </article>
         </section>
     </main>
+    <script>
+        const slides = document.querySelectorAll(".carousel-slide");
+        const previousButton = document.querySelector(".carousel-button-prev");
+        const nextButton = document.querySelector(".carousel-button-next");
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides[currentSlide].classList.remove("is-active");
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add("is-active");
+        }
+
+        previousButton.addEventListener("click", () => {
+            showSlide(currentSlide - 1);
+        });
+
+        nextButton.addEventListener("click", () => {
+            showSlide(currentSlide + 1);
+        });
+    </script>
 </body>
 </html>
