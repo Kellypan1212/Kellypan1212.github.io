@@ -1,15 +1,9 @@
 :root {
     --page-padding: clamp(18px, 5vw, 48px);
     --avatar-size: clamp(88px, 18vw, 140px);
-    --nav-height: 64px;
     --text-shadow:
         0 3px 6px rgba(0, 0, 0, 0.85),
         0 8px 18px rgba(0, 0, 0, 0.55);
-}
-
-html {
-    scroll-behavior: smooth;
-    scroll-padding-top: var(--nav-height);
 }
 
 body {
@@ -17,59 +11,10 @@ body {
     color: white;
     background-color: #1a1a1a;
     font-family: sans-serif;
-    padding-top: var(--nav-height);
 }
 
 main {
     padding-bottom: 32px;
-}
-
-.navbar {
-    width: 100%;
-    min-height: var(--nav-height);
-    padding: 0 var(--page-padding);
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    background: rgba(26, 26, 26, 0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.nav-logo,
-.nav-links a {
-    color: white;
-    text-decoration: none;
-}
-
-.nav-logo {
-    flex: 0 0 auto;
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: clamp(12px, 3vw, 28px);
-}
-
-.nav-links a {
-    font-size: clamp(0.9rem, 2.3vw, 1rem);
-    line-height: 1.2;
-    color: rgba(255, 255, 255, 0.78);
-    transition: color 0.2s ease;
-}
-
-.nav-links a:hover {
-    color: white;
 }
 
 .cover {
@@ -300,25 +245,6 @@ main {
     .photo-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         padding-top: 32px;
-    }
-}
-
-@media (max-width: 560px) {
-    :root {
-        --nav-height: 92px;
-    }
-
-    .navbar {
-        align-items: flex-start;
-        flex-direction: column;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .nav-links {
-        width: 100%;
-        justify-content: space-between;
-        gap: 8px;
     }
 }
 
