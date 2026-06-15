@@ -124,6 +124,44 @@ body {
     transform: translate(-50%, 0);
 }
 
+.home-page .nav-logo,
+.home-page .nav-links > a,
+.home-page .nav-dropdown {
+    animation: navSlideIn 0.55s ease both;
+}
+
+.home-page .nav-logo {
+    animation-delay: 0.05s;
+}
+
+.home-page .nav-links > a:nth-child(1) {
+    animation-delay: 0.12s;
+}
+
+.home-page .nav-dropdown:nth-child(2) {
+    animation-delay: 0.19s;
+}
+
+.home-page .nav-dropdown:nth-child(3) {
+    animation-delay: 0.26s;
+}
+
+.home-page .nav-links > a:last-child {
+    animation-delay: 0.33s;
+}
+
+@keyframes navSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(28px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 @media (max-width: 560px) {
     :root {
         --nav-height: 92px;
