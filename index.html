@@ -1,39 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>主頁</title>
     <link rel="stylesheet" href="lem.css">
-    <link rel="stylesheet" href="Menu.css">
 </head>
 <body class="home-page">
-    <nav class="navbar" aria-label="主要導覽">
-        <a class="nav-logo" href="index.html">稀蝸</a>
-        <div class="nav-links">
-            <a href="index.html">主頁</a>
-            <div class="nav-dropdown">
-                <button class="nav-dropdown-trigger" type="button">作品預覽</button>
-                <div class="nav-dropdown-menu">
-                    <a href="works.html">原創</a>
-                    <a href="fanart.html">二創</a>
-                </div>
-            </div>
-            <div class="nav-dropdown">
-                <button class="nav-dropdown-trigger" type="button">關於委託</button>
-                <div class="nav-dropdown-menu">
-                    <a href="price.html">價目表</a>
-                    <a href="notice.html">委託需知</a>
-                </div>
-            </div>
-            <a href="contact.html">聯絡我</a>
-        </div>
-    </nav>
+    <div id="site-nav"></div>
 
     <div class="cover" id="home">
         <div class="carousel" aria-label="作品圖片輪播">
             <img class="carousel-slide is-active" src="img/488220431_600699739680774_1302792377442457419_n.jpg" alt="輪播作品 1">
-            <img class="carousel-slide" src="img/657746246_893992547018157_3363821962379930125_n.jpg" alt="輪播作品 2">
+            <img class="carousel-slide" src="ph/fanart/texduo/未命名的作品.jpg" alt="輪播作品 2">
             <img class="carousel-slide" src="img/617728312_833207739763305_4519504809564729019_n.jpg" alt="輪播作品 3">
             <img class="carousel-slide" src="img/626609219_847426198341459_2977584444697287267_n.jpg" alt="輪播作品 4">
 
@@ -54,7 +33,7 @@
                 <h2>稀蝸</h2>
                 <p>一隻稀有的蝸牛
                     <br>可以叫我稀蝸🐌🐌🐌
-                    <br>19↑｜🇹🇼｜OC人｜喜歡R18G、R18
+                    <br>19↑｜🇹🇼｜畫點OC和二創｜喜歡R18G、R18
                     <br>自由接案繪師，委託開放中，歡迎詢問。
                     <br>委託相關走FB
                 </p>
@@ -71,7 +50,6 @@
                 </p>
             </div>
         </section>
-
 
         <section class="photo-grid" id="original">
             <article class="photo-box" id="day-package">
@@ -111,25 +89,8 @@
             </article>
         </section>
     </main>
-    <script>
-        const slides = document.querySelectorAll(".carousel-slide");
-        const previousButton = document.querySelector(".carousel-button-prev");
-        const nextButton = document.querySelector(".carousel-button-next");
-        let currentSlide = 0;
 
-        function showSlide(index) {
-            slides[currentSlide].classList.remove("is-active");
-            currentSlide = (index + slides.length) % slides.length;
-            slides[currentSlide].classList.add("is-active");
-        }
-
-        previousButton.addEventListener("click", () => {
-            showSlide(currentSlide - 1);
-        });
-
-        nextButton.addEventListener("click", () => {
-            showSlide(currentSlide + 1);
-        });
-    </script>
+    <script src="js/site.js"></script>
+    <script src="js/carousel.js"></script>
 </body>
 </html>
