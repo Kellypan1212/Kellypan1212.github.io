@@ -694,6 +694,40 @@ a:focus {
 }
 
 .work-info{ flex:1 1 auto; }
+
+/* subtle lift & scale on hover for work cards; keeps original layout and composes with existing shadows */
+.work-card{ position: relative; transition: transform 0.32s ease, box-shadow 0.32s ease; will-change: transform, box-shadow; }
+.work-card:hover, .work-card:focus-within{
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+/* hint bubble shown on hover / focus; hidden by default */
+.work-hint{
+    position: absolute;
+    right: clamp(16px, 4vw, 28px);
+    top: 50%;
+    transform: translateY(-50%) translateX(8px);
+    opacity: 0;
+    color: rgba(255,255,255,0.95);
+    background: rgba(0,0,0,0.28);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    font-weight: 600;
+    transition: opacity 0.32s ease, transform 0.32s ease;
+    pointer-events: none;
+}
+
+.work-card:hover .work-hint,
+.work-card:focus-within .work-hint{
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+@media (max-width:760px){
+    .work-hint{ position: static; transform: none; opacity: 1; margin-top: 10px; background: transparent; padding: 0; font-weight: 600; }
+}
 .work-title{
     margin: 0 0 8px 0;
     font-size: clamp(1.6rem, 3.4vw, 2.4rem);
