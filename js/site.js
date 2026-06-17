@@ -120,12 +120,12 @@
 }
 .footer-inner .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
 .footer-inner .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
-.footer-inner .footer-right a:hover{ text-decoration: underline; opacity:1; }
+.footer-inner .footer-right a:hover{ opacity:1; }
 
 /* footer social links (bottom-right) */
 .footer-bottom-right{ display:flex; gap: 12px; align-items:center; }
 .footer-bottom-right a{ color: rgba(0,0,0,0.6); text-decoration:none; font-size:0.95rem; }
-.footer-bottom-right a:hover{ text-decoration:underline; color: rgba(0,0,0,0.85); }
+.footer-bottom-right a:hover{ color: rgba(0,0,0,0.85); }
 
 @media (max-width:1100px){
   .footer-bottom-right{ justify-content:center; }
