@@ -460,6 +460,14 @@ a:focus {
     text-align: center;
 }
 
+.page-header .page-title {
+    margin: 0 0 clamp(24px, 4vw, 32px);
+    font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+}
+
 .photo-grid {
     display: flex;
     flex-direction: column; /* single column, top-to-bottom */
