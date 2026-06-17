@@ -702,53 +702,42 @@ a:focus {
     box-shadow: 0 30px 60px rgba(0,0,0,0.6);
 }
 
-/* hint bubble shown on hover / focus; hidden by default */
+/* hint fixed at left-bottom; visible by default. Arrow animates on hover. */
 .work-hint{
     position: absolute;
-    right: clamp(16px, 4vw, 28px);
-    top: 50%;
-    transform: translateY(-50%) translateX(8px);
-    opacity: 0;
+    left: clamp(16px, 4vw, 28px);
+    bottom: clamp(14px, 4vw, 20px);
+    top: auto;
+    transform: none;
+    opacity: 1;
     color: rgba(255,255,255,0.95);
     background: rgba(0,0,0,0.28);
     padding: 8px 12px;
     border-radius: 10px;
     font-size: clamp(0.95rem, 2vw, 1.05rem);
     font-weight: 600;
-    transition: opacity 0.32s ease, transform 0.32s ease;
+    transition: transform 0.28s ease, opacity 0.28s ease;
     pointer-events: none;
 }
 
-.work-card:hover .work-hint,
-.work-card:focus-within .work-hint{
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
+/* arrow default slight left offset for motion feel */
+.work-hint .hint-arrow{
+    display:inline-block;
+    margin-left:8px;
+    transform: translateX(-4px);
+    transition: transform 0.28s cubic-bezier(.2,.9,.2,1);
+}
+
+/* on card hover only animate the arrow to the right */
+.work-card:hover .work-hint .hint-arrow,
+.work-card:focus-within .work-hint .hint-arrow{
+    transform: translateX(8px);
 }
 
 @media (max-width:760px){
     .work-hint{ position: static; transform: none; opacity: 1; margin-top: 10px; background: transparent; padding: 0; font-weight: 600; }
+    .work-hint .hint-arrow{ transform: translateX(0); }
 }
-
-/* inner wrapper used to apply JS-driven transforms so parent :hover CSS still composes */
-.work-card-inner{
-    display:block;
-    width:100%;
-    height:100%;
-    transform: translateZ(0);
-    transform-style: preserve-3d;
-    transition: transform 0.18s cubic-bezier(.2,.9,.2,1);
-    will-change: transform;
-}
-
-/* arrow inside hint follows mouse slightly */
-.work-hint .hint-arrow{
-    display:inline-block;
-    margin-left:8px;
-    transition: transform 0.22s ease;
-}
-
-.work-hint .hint-arrow::before{ content: '' }
-
 .work-title{
     margin: 0 0 8px 0;
     font-size: clamp(1.6rem, 3.4vw, 2.4rem);
