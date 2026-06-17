@@ -173,4 +173,113 @@
 
     document.body.appendChild(footer);
 
+    /* Work-card parallax and 3D tilt + arrow follow (non-invasive):
+       - Wrap existing card children in .work-card-inner so CSS :hover on .work-card still applies.
+       - Apply parallax translateY to inner based on scroll and per-card depth.
+       - Apply subtle rotateX/rotateY and scale on mousemove for 3D push effect.
+       - Arrow inside .work-hint follows cursor slightly.
+       This script is additive and preserves existing HTML structure and CSS hover rules. */
+    (function () {
+        const cards = Array.from(document.querySelectorAll('.work-card'));
+        if (!cards.length) return;
+
+        // Initialize each card
+        cards.forEach((card, idx) => {
+            // wrap children into .work-card-inner if not already
+            if (!card.querySelector('.work-card-inner')) {
+                const inner = document.createElement('div');
+                inner.className = 'work-card-inner';
+                while (card.firstChild) inner.appendChild(card.firstChild);
+                card.appendChild(inner);
+            }
+
+            // ensure hint arrow exists
+            const hint = card.querySelector('.work-hint');
+            if (hint && !hint.querySelector('.hint-arrow')) {
+                const arrow = document.createElement('span');
+                arrow.className = 'hint-arrow';
+                arrow.textContent = '\u2192'; // arrow glyph
+                hint.appendChild(arrow);
+            }
+
+            // assign a depth for parallax (slightly varying by index)
+            const depth = 0.02 + (idx % 3) * 0.02; // 0.02, 0.04, 0.06
+            card.dataset.depth = String(depth);
+
+            // per-card state
+            card._wcState = { parallaxY: 0, tiltX: 0, tiltY: 0, scale: 1 };
+
+            // mouse interactions
+            card.addEventListener('mousemove', (ev) => {
+                const r = card.getBoundingClientRect();
+                const cx = r.left + r.width / 2;
+                const cy = r.top + r.height / 2;
+                const px = (ev.clientX - cx) / (r.width / 2);
+                const py = (ev.clientY - cy) / (r.height / 2);
+                const maxTilt = 8; // degrees
+                card._wcState.tiltX = -py * maxTilt;
+                card._wcState.tiltY = px * maxTilt;
+                card._wcState.scale = 1.035;
+
+                // arrow follow
+                const arrow = card.querySelector('.work-hint .hint-arrow');
+                if (arrow) {
+                    const arrowOffset = Math.max(-1, Math.min(1, px)) * 8; // px
+                    arrow.style.transform = `translateX(${arrowOffset}px)`;
+                }
+            }, { passive: true });
+
+            card.addEventListener('mouseleave', () => {
+                card._wcState.tiltX = 0;
+                card._wcState.tiltY = 0;
+                card._wcState.scale = 1;
+                const arrow = card.querySelector('.work-hint .hint-arrow');
+                if (arrow) arrow.style.transform = '';
+            });
+
+            // keyboard accessibility: apply small effect on focus within
+            card.addEventListener('focusin', () => { card._wcState.scale = 1.02; });
+            card.addEventListener('focusout', () => { card._wcState.scale = 1; });
+        });
+
+        // scroll-driven parallax loop
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(update);
+            }
+        }
+
+        function update() {
+            ticking = false;
+            const vpCenter = window.innerHeight / 2;
+            cards.forEach((card) => {
+                const r = card.getBoundingClientRect();
+                const cardCenter = r.top + r.height / 2;
+                const depth = parseFloat(card.dataset.depth) || 0.03;
+                const offset = (vpCenter - cardCenter);
+                const parallaxY = offset * depth; // px
+                card._wcState.parallaxY = parallaxY;
+
+                const s = card._wcState;
+                const inner = card.querySelector('.work-card-inner');
+                if (inner) {
+                    // compose transform: parallax translate + tilt rotations + scale
+                    const t = `translateY(${s.parallaxY}px) rotateX(${s.tiltX}deg) rotateY(${s.tiltY}deg) scale(${s.scale})`;
+                    inner.style.transform = t;
+                    inner.style.transformStyle = 'preserve-3d';
+                    inner.style.transition = 'transform 0.18s cubic-bezier(.2,.9,.2,1)';
+                    inner.style.willChange = 'transform';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        // initial update
+        onScroll();
+
+    })();
+
 })();

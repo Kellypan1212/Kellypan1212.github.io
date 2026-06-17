@@ -728,6 +728,27 @@ a:focus {
 @media (max-width:760px){
     .work-hint{ position: static; transform: none; opacity: 1; margin-top: 10px; background: transparent; padding: 0; font-weight: 600; }
 }
+
+/* inner wrapper used to apply JS-driven transforms so parent :hover CSS still composes */
+.work-card-inner{
+    display:block;
+    width:100%;
+    height:100%;
+    transform: translateZ(0);
+    transform-style: preserve-3d;
+    transition: transform 0.18s cubic-bezier(.2,.9,.2,1);
+    will-change: transform;
+}
+
+/* arrow inside hint follows mouse slightly */
+.work-hint .hint-arrow{
+    display:inline-block;
+    margin-left:8px;
+    transition: transform 0.22s ease;
+}
+
+.work-hint .hint-arrow::before{ content: '' }
+
 .work-title{
     margin: 0 0 8px 0;
     font-size: clamp(1.6rem, 3.4vw, 2.4rem);
