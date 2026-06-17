@@ -77,24 +77,29 @@
 
     /* Footer styles and markup injected dynamically so all pages share a single source */
     const footerCSS = `
+/* Make footer background full-bleed and fixed height, remove horizontal gaps */
 .site-footer{
-  width:100%;
+  background: #ffc926;
+  width: 100vw;               /* full viewport width */
+  margin-left: calc(50% - 50vw); /* neutralize any constrained container */
+  margin-right: calc(50% - 50vw);
+  height: 240px;             /* fixed height */
+  padding: 0;                /* no horizontal padding so background touches edges */
+  box-sizing: border-box;
   display:flex;
   align-items:center;
-  justify-content:center;
-  padding: 18px 0; /* space around the fixed-size inner box */
-  box-sizing:border-box;
+  justify-content:center;    /* center inner content */
 }
+/* inner content box that holds the left/right elements */
 .footer-inner{
-  width: 980px;
-  height: 240.5px;
-  background: #ffc926;
-  color: #000;
+  max-width: 980px;          /* content width limit */
+  width: 100%;
+  height: 100%;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap: 18px;
-  padding: 24px 28px;
+  padding: 24px 28px;        /* internal padding for content spacing */
   box-sizing:border-box;
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
@@ -103,8 +108,10 @@
 .footer-inner .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
 .footer-inner .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
 .footer-inner .footer-right a:hover{ text-decoration: underline; opacity:1; }
+/* Responsive fallback: on narrow viewports allow height to auto and stack content */
 @media (max-width:1100px){
-  .footer-inner{ width: calc(100% - 32px); height: auto; flex-direction:column; gap:12px; padding:16px; }
+  .site-footer{ height: auto; padding: 12px 0; }
+  .footer-inner{ max-width: calc(100% - 32px); flex-direction:column; gap:12px; padding:16px; height:auto; }
   .footer-inner .footer-right{ justify-content:center; flex-wrap:wrap; }
 }
 `;
