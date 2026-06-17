@@ -663,6 +663,58 @@ a:focus {
     justify-content:flex-start;
 }
 
+/* Work card (horizontal) for works page */
+.work-list{ padding: 8px var(--page-padding); }
+.work-card{
+    display:flex;
+    align-items:center;
+    gap: 24px;
+    width: calc(100% - 2 * var(--page-padding));
+    max-width: 1100px;
+    margin: 12px auto;
+    padding: 18px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+}
+
+.work-cover{
+    flex: 0 0 220px; /* square cover */
+    width: 220px;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.work-cover img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display:block;
+}
+
+.work-info{ flex:1 1 auto; }
+.work-title{
+    margin: 0 0 8px 0;
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.04em;
+}
+.work-cats{
+    color: rgba(255,255,255,0.68);
+    font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+    line-height: 1.6;
+}
+
+/* Responsive: stack vertically on narrow screens */
+@media (max-width:760px){
+    .work-card{ flex-direction:column; align-items:flex-start; padding:14px; }
+    .work-cover{ width: 100%; height: auto; aspect-ratio: 1 / 1; }
+    .work-cover img{ height: auto; }
+    .work-info{ width: 100%; }
+}
+
 .cat-btn{
     background: #1a1a1a;        /* match page background */
     color:#fff;                 /* white text */
