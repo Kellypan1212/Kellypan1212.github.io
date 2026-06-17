@@ -173,4 +173,67 @@
 
     document.body.appendChild(footer);
 
+    /* Magnetic 3D tilt effect for .photo-box cards — non-invasive, preserves existing hover animations */
+    (function () {
+        const boxes = document.querySelectorAll('.photo-box');
+        if (!boxes.length) return;
+        const maxTilt = 12; // degrees
+        const maxTranslateZ = 18; // px
+
+        boxes.forEach((box) => {
+            // ensure perspective is available via CSS too
+            box.style.perspective = box.style.perspective || '1000px';
+
+            // wrap existing children in a tilt container so parent hover transforms still apply
+            if (!box.querySelector('.tilt-wrap')) {
+                const wrap = document.createElement('div');
+                wrap.className = 'tilt-wrap';
+                while (box.firstChild) wrap.appendChild(box.firstChild);
+                box.appendChild(wrap);
+            }
+            const wrap = box.querySelector('.tilt-wrap');
+
+            let bounds = null;
+            function updateBounds() { bounds = box.getBoundingClientRect(); }
+
+            let raf = null;
+            function handleMove(e) {
+                if (!bounds) updateBounds();
+                const x = e.clientX - bounds.left;
+                const y = e.clientY - bounds.top;
+                const px = (x / bounds.width) * 2 - 1; // -1 .. 1
+                const py = (y / bounds.height) * 2 - 1;
+
+                const rotY = px * maxTilt; // rotateY
+                const rotX = -py * maxTilt; // rotateX (invert so top tilts away)
+                const dist = Math.sqrt(px * px + py * py);
+                const tz = (1 - Math.min(dist, 1)) * maxTranslateZ;
+
+                // throttle to animation frame
+                if (raf) cancelAnimationFrame(raf);
+                raf = requestAnimationFrame(() => {
+                    wrap.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(${tz}px)`;
+                });
+            }
+
+            function handleEnter() {
+                updateBounds();
+                wrap.style.transition = 'transform 0.12s ease-out';
+                box.addEventListener('mousemove', handleMove);
+                window.addEventListener('resize', updateBounds);
+            }
+
+            function handleLeave() {
+                box.removeEventListener('mousemove', handleMove);
+                window.removeEventListener('resize', updateBounds);
+                if (raf) cancelAnimationFrame(raf);
+                wrap.style.transition = 'transform 0.45s cubic-bezier(.2,.8,.2,1)';
+                wrap.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            }
+
+            box.addEventListener('mouseenter', handleEnter);
+            box.addEventListener('mouseleave', handleLeave);
+        });
+    })();
+
 })();
