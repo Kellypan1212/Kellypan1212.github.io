@@ -74,4 +74,48 @@
         },
         { passive: true }
     );
+
+    /* Footer styles and markup injected dynamically so all pages share a single source */
+    const footerCSS = `
+.site-footer{
+  background: #ffc926;
+  color: #000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 18px;
+  padding: 14px var(--page-padding);
+  box-sizing:border-box;
+  font-family: inherit;
+  font-size: clamp(0.95rem, 2.1vw, 1rem);
+}
+.site-footer .footer-left{ font-weight:700; }
+.site-footer .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
+.site-footer .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
+.site-footer .footer-right a:hover{ text-decoration: underline; opacity:1; }
+@media (max-width:560px){
+  .site-footer{ flex-direction:column; gap:8px; text-align:center; }
+  .site-footer .footer-right{ justify-content:center; flex-wrap:wrap; gap:10px; }
+}
+`;
+
+    const style = document.createElement('style');
+    style.textContent = footerCSS;
+    document.head.appendChild(style);
+
+    const footer = document.createElement('footer');
+    footer.className = 'site-footer';
+    footer.setAttribute('role', 'contentinfo');
+    footer.innerHTML = `
+        <div class="footer-left">稀蝸</div>
+        <nav class="footer-right" aria-label="頁尾導覽">
+            <a href="works.html">作品預覽</a>
+            <a href="price.html">價目表</a>
+            <a href="notice.html">委託需知</a>
+            <a href="contact.html">聯絡我</a>
+        </nav>
+    `;
+
+    document.body.appendChild(footer);
+
 })();
