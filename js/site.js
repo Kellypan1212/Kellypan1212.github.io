@@ -98,9 +98,9 @@
   display:flex;
   flex-direction:column;     /* stack top and bottom rows */
   align-items:stretch;
-  justify-content:center;
+  justify-content:flex-start; /* align content to top */
   gap: 12px;
-  padding: 18px 28px;        /* internal padding for content spacing */
+  padding: 8px 28px;        /* reduce top padding so content shifts upward */
   box-sizing:border-box;
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
