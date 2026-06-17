@@ -201,4 +201,9 @@ body {
     .nav-dropdown:focus-within .nav-dropdown-menu {
         transform: translateY(0);
     }
+
+    /* Mobile safety: constrain media and ensure box-sizing to avoid horizontal overflow */
+    *, *::before, *::after { box-sizing: border-box; }
+    img, picture, video { max-width: 100%; height: auto; display: block; }
+    .nav-links { flex-wrap: wrap; }
 }

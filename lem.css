@@ -631,6 +631,78 @@ a:focus {
     .nav-dropdown:focus-within .nav-dropdown-menu {
         transform: translateY(0);
     }
+
+    /* --- Mobile-specific fixes (only affect small screens) --- */
+
+    /* Avoid overflow from calc() rounding and keep dimensions predictable */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* Constrain media to container width so large images don't cause horizontal scroll */
+    img, picture, video, canvas {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    /* Make wide containers consistently respect page padding and not overflow */
+    .photo-box,
+    .work-card,
+    .price-list,
+    .page-content,
+    .about-me-header,
+    .about-me-card {
+        width: calc(100% - (2 * var(--page-padding)));
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Ensure photo boxes don't exceed viewport and center them */
+    .photo-box {
+        width: calc(100% - (2 * var(--page-padding)));
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Work card: stack and use full available width */
+    .work-card {
+        width: calc(100% - (2 * var(--page-padding)));
+        max-width: 100%;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    /* Allow nav links to wrap without causing overflow */
+    .nav-links { flex-wrap: wrap; }
+
+    /* Reduce overly-large overlay text and ensure it wraps within container */
+    .overlay-text {
+        font-size: clamp(1.25rem, 5.5vw, 2rem);
+        left: 16px;
+        right: 16px;
+        max-width: calc(100% - 32px);
+        white-space: normal;
+    }
+
+    /* Keep hover-info inside card on small screens */
+    .hover-info {
+        right: 12px;
+        left: auto;
+        top: auto;
+        bottom: 14px;
+        transform: translateY(0);
+        max-width: 60%;
+    }
+
+    /* Reduce carousel height on phones to avoid excessive vertical cropping */
+    .carousel { height: 48vw; min-height: 110px; }
+
+    /* Avoid text-selection or focus outlines causing horizontal overflow */
+    .card-inner-link { word-break: break-word; }
 }
 
 /* Category buttons under the about-me section */
