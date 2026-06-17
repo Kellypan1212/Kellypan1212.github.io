@@ -100,14 +100,14 @@
   align-items:stretch;
   justify-content:flex-start; /* align content to top */
   gap: 12px;
-  padding: 14px 28px;        /* slightly increased top padding to nudge content downward */
+  padding: 40px 28px;        /* slightly increased top padding to nudge content downward */
   box-sizing:border-box;
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
 }
 
 .footer-top{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
-.footer-bottom{ display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.footer-bottom{ display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:8px; }
 .footer-bottom-left{ /* spacer so bottom row aligns with top left */
   min-width: 160px;
 }
