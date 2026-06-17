@@ -601,7 +601,7 @@ a:hover {
 }
 
 .cat-btn{
-    background:#000;            /* black background */
+    background: #1a1a1a;        /* match page background */
     color:#fff;                 /* white text */
     width: 140px;               /* fixed, consistent width */
     height: 48px;               /* fixed, consistent height */
