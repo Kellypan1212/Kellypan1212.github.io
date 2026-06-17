@@ -78,24 +78,34 @@
     /* Footer styles and markup injected dynamically so all pages share a single source */
     const footerCSS = `
 .site-footer{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 18px 0; /* space around the fixed-size inner box */
+  box-sizing:border-box;
+}
+.footer-inner{
+  width: 980px;
+  height: 240.5px;
   background: #ffc926;
   color: #000;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap: 18px;
-  padding: 14px var(--page-padding);
+  padding: 24px 28px;
   box-sizing:border-box;
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
 }
-.site-footer .footer-left{ font-weight:700; }
-.site-footer .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
-.site-footer .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
-.site-footer .footer-right a:hover{ text-decoration: underline; opacity:1; }
-@media (max-width:560px){
-  .site-footer{ flex-direction:column; gap:8px; text-align:center; }
-  .site-footer .footer-right{ justify-content:center; flex-wrap:wrap; gap:10px; }
+.footer-inner .footer-left{ font-weight:700; }
+.footer-inner .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
+.footer-inner .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
+.footer-inner .footer-right a:hover{ text-decoration: underline; opacity:1; }
+@media (max-width:1100px){
+  .footer-inner{ width: calc(100% - 32px); height: auto; flex-direction:column; gap:12px; padding:16px; }
+  .footer-inner .footer-right{ justify-content:center; flex-wrap:wrap; }
 }
 `;
 
@@ -107,13 +117,15 @@
     footer.className = 'site-footer';
     footer.setAttribute('role', 'contentinfo');
     footer.innerHTML = `
-        <div class="footer-left">稀蝸</div>
-        <nav class="footer-right" aria-label="頁尾導覽">
-            <a href="works.html">作品預覽</a>
-            <a href="price.html">價目表</a>
-            <a href="notice.html">委託需知</a>
-            <a href="contact.html">聯絡我</a>
-        </nav>
+        <div class="footer-inner">
+            <div class="footer-left">稀蝸</div>
+            <nav class="footer-right" aria-label="頁尾導覽">
+                <a href="works.html">作品預覽</a>
+                <a href="price.html">價目表</a>
+                <a href="notice.html">委託需知</a>
+                <a href="contact.html">聯絡我</a>
+            </nav>
+        </div>
     `;
 
     document.body.appendChild(footer);
