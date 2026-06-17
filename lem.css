@@ -454,7 +454,7 @@ a:hover {
 /* Layout/size only: make cards near-full-width while preserving existing hover/animation rules */
 .photo-box {
     width: calc(100% - 2 * var(--page-padding)); /* near full content width while preserving page padding */
-    max-width: 1280px; /* increased cap for wider cards */
+    max-width: 1600px; /* increased cap for wider cards */
     height: 120px;                 /* keep flattened default */
     position: relative;
     overflow: hidden;
