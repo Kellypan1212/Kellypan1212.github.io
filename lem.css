@@ -466,6 +466,18 @@ a:hover {
     background: #000; /* fallback while image loads */
 }
 
+/* Frosted/matte overlay to preserve matte look */
+.photo-box::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(26,26,26,0.28); /* subtle dark matte */
+    backdrop-filter: blur(6px) saturate(0.95);
+    -webkit-backdrop-filter: blur(6px) saturate(0.95);
+    pointer-events: none;
+    transition: background 0.35s ease, backdrop-filter 0.35s ease;
+}
+
 .photo-box img {
     width: 100%;
     height: 100%;
@@ -475,11 +487,16 @@ a:hover {
     filter: brightness(0.85);
 }
 
-/* Hover: card expands toward original proportion and lifts */
+/* Hover: card expands toward original proportion and lifts. Keep matte but slightly reduce its opacity */
 .photo-box:hover {
     transform: translateY(-8px) scale(1.01);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
     height: 520px; /* expand to reveal more of the image */
+}
+
+.photo-box:hover::after{
+    background: rgba(26,26,26,0.18);
+    backdrop-filter: blur(4px) saturate(0.98);
 }
 
 .photo-box:hover img {
