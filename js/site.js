@@ -9,7 +9,7 @@
         <div class="nav-links">
             <a href="index.html" data-page="index.html">主頁</a>
             <div class="nav-dropdown">
-                <a class="nav-dropdown-trigger" href="mart.html" data-page="mart.html">作品預覽</a>
+                <a class="nav-dropdown-trigger" href="myart.html" data-page="myart.html">作品預覽</a>
                 <div class="nav-dropdown-menu">
                     <a href="works.html" data-page="works.html">原創</a>
                     <a href="fanart.html" data-page="fanart.html">二創</a>
@@ -151,7 +151,7 @@
             <div class="footer-top">
                 <div class="footer-left">稀蝸</div>
                 <nav class="footer-right" aria-label="頁尾導覽">
-                    <a href="mart.html">作品預覽</a>
+                    <a href="myart.html">作品預覽</a>
                     <a href="price.html">價目表</a>
                     <a href="notice.html">委託需知</a>
                     <a href="contact.html">聯絡我</a>
