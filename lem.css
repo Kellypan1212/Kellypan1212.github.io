@@ -27,6 +27,15 @@ body {
     color: white;
     background-color: #1a1a1a;
     font-family: sans-serif;
+    /* Make page a column flex layout so footer can stick to bottom when content is short */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Let main content grow to push footer to bottom when viewport is taller than content */
+main, .page-content {
+    flex: 1 0 auto;
 }
 
 main {
