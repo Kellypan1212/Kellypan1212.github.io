@@ -792,3 +792,22 @@ a:focus {
   .myart-page .work-hint{ position: static; display:block; margin-top:10px; background:transparent; padding:0; }
   .myart-page .work-hint .hint-arrow{ transform: translateX(0); }
 }
+/* myart: subtle lift + scale on hover (preserve existing styles) */
+.myart-page .work-card{
+  transition: transform 0.28s cubic-bezier(.2,.9,.2,1), box-shadow 0.28s cubic-bezier(.2,.9,.2,1);
+  will-change: transform, box-shadow;
+}
+.myart-page .work-card:hover,
+.myart-page .work-card:focus-within{
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+@media (max-width:760px){
+  /* reduce lift on small screens */
+  .myart-page .work-card:hover,
+  .myart-page .work-card:focus-within{
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 18px 36px rgba(0,0,0,0.5);
+  }
+}
