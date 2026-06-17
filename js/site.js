@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="nav-dropdown">
-                <button class="nav-dropdown-trigger" type="button">關於委託</button>
+                <a class="nav-dropdown-trigger" href="price.html" data-page="price.html">關於委託</a>
                 <div class="nav-dropdown-menu">
                     <a href="price.html" data-page="price.html">價目表</a>
                     <a href="notice.html" data-page="notice.html">委託需知</a>
