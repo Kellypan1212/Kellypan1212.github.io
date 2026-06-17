@@ -445,21 +445,22 @@ a:hover {
 }
 
 .photo-grid {
-    display: grid;
-    /* fewer columns so each card appears wider; min width increased for 'fatter' cards */
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: clamp(18px, 3vw, 28px);
-    align-items: start;
+    align-items: center;
+    padding: 0; /* rely on .page-content padding for side margins */
 }
 
-/* Vertical/tall card by default; expands slightly on hover */
+/* Single-column, flattened card by default; expands on hover */
 .photo-box {
     width: 100%;
-    height: 420px;                /* taller default for vertical look */
+    max-width: 100%;            /* occupy available content width (respecting page padding) */
+    height: 240px;             /* flattened default height (扁長設計) */
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
     transition: transform 0.45s ease, box-shadow 0.45s ease, height 0.45s ease;
     will-change: transform, box-shadow, height;
     background: #000; /* fallback while image loads */
@@ -469,17 +470,16 @@ a:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* slightly zoomed so flattened crops are avoided */
-    transform: scale(1.15);
+    transform: scale(1.25);    /* slightly zoomed when flattened */
     transition: transform 0.45s ease, filter 0.45s ease;
     filter: brightness(0.85);
 }
 
-/* Hover: card lifts and slightly increases size (closer to original image proportions) */
+/* Hover: card expands toward original proportion and lifts */
 .photo-box:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-8px) scale(1.01);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
-    height: 520px; /* expand to reveal more detail */
+    height: 520px; /* expand to reveal more of the image */
 }
 
 .photo-box:hover img {
@@ -487,7 +487,7 @@ a:hover {
     filter: brightness(1);
 }
 
-/* Title overlay styling kept consistent and animated; move title closer to bottom for vertical cards */
+/* Title overlay styling kept consistent and animated; place near bottom for flattened cards */
 .overlay-text {
     position: absolute;
     left: clamp(16px, 4vw, 32px);
@@ -502,10 +502,9 @@ a:hover {
 
 .photo-box:hover .overlay-text {
     transform: translateY(-4px);
-    color: #fff;
 }
 
-/* Ensure hover-info still appears nicely (positioning relative to bottom) */
+/* Ensure hover-info appears nicely */
 .hover-info {
     transition: transform 0.45s ease, opacity 0.45s ease;
     position: absolute;
@@ -518,8 +517,12 @@ a:hover {
     transform: translateY(-6px);
 }
 
+@media (min-width:1100px){
+    /* on wide screens, allow cards to have generous max-width close to content width */
+    .photo-box{ max-width: 980px; }
+}
+
 @media (max-width:880px){
-    .photo-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
     .photo-box{ height: 360px; }
     .photo-box:hover{ height: 440px; }
 }
@@ -527,57 +530,6 @@ a:hover {
 @media (max-width:560px){
     .photo-box{ height: 260px; }
     .photo-box:hover{ height: 300px; }
-}
-
-.overlay-text {
-    position: absolute;
-    left: clamp(20px, 4vw, 40px);
-    bottom: clamp(18px, 4vw, 30px);
-    color: white;
-    font-size: clamp(2rem, 7vw, 3rem);
-    font-weight: bold;
-    text-shadow: var(--text-shadow);
-    transform: translateY(0);
-    opacity: 1;
-    transition: transform 0.45s ease, opacity 0.45s ease;
-}
-
-.photo-box:hover .overlay-text {
-    transform: translateY(28px);
-    opacity: 0;
-}
-
-.hover-info {
-    position: absolute;
-    top: 50%;
-    right: clamp(20px, 4vw, 40px);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 16px 20px;
-    border-radius: 14px;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(8px);
-    color: white;
-    text-align: left;
-    opacity: 0;
-    transform: translate(-24px, -50%);
-    transition: transform 0.45s ease, opacity 0.45s ease;
-    pointer-events: none;
-}
-
-.hover-info span:first-child {
-    font-size: clamp(1.4rem, 4vw, 2rem);
-    font-weight: 700;
-}
-
-.hover-info span:last-child {
-    font-size: clamp(1rem, 2.4vw, 1.15rem);
-}
-
-.photo-box:hover .hover-info {
-    opacity: 1;
-    transform: translate(0, -50%);
 }
 
 /* ==========================================================================
