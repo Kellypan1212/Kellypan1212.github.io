@@ -664,6 +664,14 @@ a:hover {
     padding: 0 14px; /* keep horizontal breathing while using fixed height */
     border: none;
 }
+.cat-btn .btn-arrow{ /* small right arrow inside button */
+    display:inline-block;
+    margin-left:8px;
+    transition: transform 0.18s ease;
+}
+.cat-btn:hover .btn-arrow{
+    transform: translateX(6px);
+}
 
 .cat-btn:hover,
 .cat-btn:focus{
