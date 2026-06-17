@@ -13,7 +13,7 @@
         <!-- 作品預覽內容 -->
 
         <section class="work-list">
-            <article class="work-card">
+            <article class="work-card" data-href="works.html" tabindex="0" onclick="if(!event.target.closest('a')) location.href='works.html'" onkeydown="if((event.key==='Enter'||event.key===' ') && document.activeElement===this){ event.preventDefault(); location.href='works.html'; }">
                 <div class="work-cover">
                     <img src="ph/works/yellow/IMG_3770 2.JPG" alt="作品封面">
                 </div>
@@ -29,7 +29,7 @@
                 <a href="#" class="work-cta" role="button" aria-label="前往作品詳情">查看更多 <span class="cta-arrow">→</span></a>
             </article>
 
-            <article class="work-card">
+            <article class="work-card" data-href="fanart.html" tabindex="0" onclick="if(!event.target.closest('a')) location.href='fanart.html'" onkeydown="if((event.key==='Enter'||event.key===' ') && document.activeElement===this){ event.preventDefault(); location.href='fanart.html'; }">
                 <div class="work-cover">
                     <img src="ph/fanart/mcyt/IMG_0619.JPG" alt="作品封面">
                 </div>
