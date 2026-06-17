@@ -36,6 +36,42 @@
     nav.querySelectorAll("[data-page]").forEach((link) => {
         if (link.dataset.page === currentPage) {
             link.setAttribute("aria-current", "page");
+
+            const dropdown = link.closest(".nav-dropdown");
+            if (dropdown) {
+                dropdown.classList.add("is-active");
+            }
         }
     });
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    function updateNavbarVisibility() {
+        const currentScrollY = window.scrollY;
+        const scrollDelta = currentScrollY - lastScrollY;
+        const hideOffset = nav.offsetHeight || 64;
+
+        if (currentScrollY <= 8) {
+            nav.classList.remove("is-hidden");
+        } else if (scrollDelta > 0 && currentScrollY > hideOffset) {
+            nav.classList.add("is-hidden");
+        } else if (scrollDelta < 0) {
+            nav.classList.remove("is-hidden");
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+    }
+
+    window.addEventListener(
+        "scroll",
+        () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateNavbarVisibility);
+                ticking = true;
+            }
+        },
+        { passive: true }
+    );
 })();

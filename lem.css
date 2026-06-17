@@ -65,12 +65,23 @@ a:hover {
     background: rgba(26, 26, 26, 0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+}
+
+.navbar.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(calc(-1 * var(--nav-height)));
 }
 
 .nav-logo,
 .nav-links a,
 .nav-dropdown-trigger {
-    color: white;
     text-decoration: none;
 }
 
@@ -78,6 +89,7 @@ a:hover {
     flex: 0 0 auto;
     font-size: 1.2rem;
     font-weight: 700;
+    color: #fff;
 }
 
 .nav-links {
@@ -91,18 +103,30 @@ a:hover {
 .nav-dropdown-trigger {
     font-size: clamp(0.9rem, 2.3vw, 1rem);
     line-height: 1.2;
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.42);
     transition: color 0.2s ease;
 }
 
 .nav-links a:hover,
-.nav-links a[aria-current="page"],
 .nav-dropdown-trigger:hover {
-    color: white;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.nav-links a[aria-current="page"],
+.nav-dropdown.is-active > .nav-dropdown-trigger {
+    color: #fff;
+}
+
+.nav-dropdown-menu a {
+    color: rgba(255, 255, 255, 0.42);
+}
+
+.nav-dropdown-menu a:hover {
+    color: rgba(255, 255, 255, 0.72);
 }
 
 .nav-dropdown-menu a[aria-current="page"] {
-    color: white;
+    color: #fff;
     background: rgba(255, 255, 255, 0.1);
 }
 
@@ -157,7 +181,7 @@ a:hover {
 }
 
 .nav-dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .nav-dropdown:hover .nav-dropdown-menu,
@@ -251,50 +275,43 @@ a:hover {
     opacity: 1;
 }
 
-.carousel-button {
-    width: 42px;
-    height: 42px;
-    border: 0;
-    border-radius: 50%;
+.carousel-pagination {
     position: absolute;
-    top: 50%;
+    bottom: clamp(18px, 4vw, 32px);
+    left: 50%;
     z-index: 2;
-    display: grid;
-    place-items: center;
-    background: rgba(0, 0, 0, 0.48);
-    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transform: translateX(-50%);
+}
+
+.carousel-dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.38);
     cursor: pointer;
-    transform: translateY(-50%);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: background 0.2s ease, transform 0.2s ease, opacity 0.2s ease, visibility 0.2s ease;
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
 }
 
-.carousel:hover .carousel-button {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+.carousel-dot:hover:not(.is-active) {
+    background: rgba(255, 255, 255, 0.62);
+    transform: scale(1.15);
 }
 
-.carousel-button:hover {
-    background: rgba(0, 0, 0, 0.68);
-    transform: translateY(-50%) scale(1.04);
+.carousel-dot.is-active {
+    width: 9px;
+    height: 9px;
+    background: #fff;
 }
 
-.carousel-button span {
-    display: block;
-    margin-top: -2px;
-    font-size: 2.1rem;
-    line-height: 1;
-}
-
-.carousel-button-prev {
-    left: clamp(12px, 3vw, 28px);
-}
-
-.carousel-button-next {
-    right: clamp(12px, 3vw, 28px);
+.carousel-dot:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 3px;
 }
 
 .avatar {
