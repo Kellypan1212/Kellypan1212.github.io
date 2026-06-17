@@ -515,7 +515,7 @@ a:focus {
 
 @media (max-width:560px){
     .photo-box{ height: 110px; }
-    .photo-box:hover{ height: 220px; }
+    .photo-box:hover{ height: 220px; transform: translateY(-4px); }
 }
 
 .overlay-text {
@@ -611,75 +611,113 @@ a:focus {
     }
 
     .nav-dropdown {
-        position: static;
+        position: relative;
     }
 
     .nav-dropdown::after {
-        content: none;
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        height: 14px;
     }
 
     .nav-dropdown-menu {
-        min-width: 0;
+        min-width: 120px;
         position: absolute;
-        top: calc(var(--nav-height) - 10px);
-        left: auto;
-        right: var(--page-padding);
-        transform: translateY(-6px);
+        top: calc(100% + 10px);
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -6px);
     }
 
     .nav-dropdown:hover .nav-dropdown-menu,
     .nav-dropdown:focus-within .nav-dropdown-menu {
-        transform: translateY(0);
+        transform: translate(-50%, 0);
     }
 
-    /* --- Mobile-specific fixes (only affect small screens) --- */
+    /* --- Mobile overflow & layout fixes (small screens only) --- */
 
-    /* Avoid overflow from calc() rounding and keep dimensions predictable */
     *, *::before, *::after {
         box-sizing: border-box;
     }
 
-    /* Constrain media to container width so large images don't cause horizontal scroll */
-    img, picture, video, canvas {
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    img:not(.carousel-slide):not(.avatar), picture, video, canvas {
         max-width: 100%;
         height: auto;
-        display: block;
     }
 
-    /* Make wide containers consistently respect page padding and not overflow */
-    .photo-box,
-    .work-card,
-    .price-list,
+    .carousel-slide,
+    .avatar {
+        max-width: none;
+    }
+
+    .carousel-slide {
+        height: 100%;
+    }
+
+    .avatar {
+        height: var(--avatar-size);
+    }
+
     .page-content,
+    .price-list,
+    .about-me,
     .about-me-header,
-    .about-me-card {
-        width: calc(100% - (2 * var(--page-padding)));
+    .about-me-card,
+    .photo-grid {
+        width: 100%;
         max-width: 100%;
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: auto;
-        margin-right: auto;
     }
 
-    /* Ensure photo boxes don't exceed viewport and center them */
-    .photo-box {
-        width: calc(100% - (2 * var(--page-padding)));
-        max-width: 100%;
-        margin: 0 auto;
+    .price-list {
+        width: 100%;
     }
 
-    /* Work card: stack and use full available width */
+    .photo-box,
     .work-card {
-        width: calc(100% - (2 * var(--page-padding)));
+        width: 100%;
         max-width: 100%;
-        padding-left: 12px;
-        padding-right: 12px;
     }
 
-    /* Allow nav links to wrap without causing overflow */
-    .nav-links { flex-wrap: wrap; }
+    .photo-box img {
+        height: 100%;
+        max-width: none;
+    }
 
-    /* Reduce overly-large overlay text and ensure it wraps within container */
+    .work-list {
+        padding-inline: var(--page-padding);
+    }
+
+    .category-buttons {
+        width: 100%;
+        padding-inline: 0;
+        margin-inline: 0;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
+
+    .nav-links a,
+    .nav-dropdown-trigger {
+        font-size: 0.82rem;
+    }
+
+    .contact-email,
+    .profile-bio,
+    .card-inner-link {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
     .overlay-text {
         font-size: clamp(1.25rem, 5.5vw, 2rem);
         left: 16px;
@@ -688,21 +726,51 @@ a:focus {
         white-space: normal;
     }
 
-    /* Keep hover-info inside card on small screens */
     .hover-info {
         right: 12px;
-        left: auto;
+        left: 12px;
         top: auto;
         bottom: 14px;
-        transform: translateY(0);
-        max-width: 60%;
+        max-width: calc(100% - 24px);
+        transform: translateY(8px);
     }
 
-    /* Reduce carousel height on phones to avoid excessive vertical cropping */
-    .carousel { height: 48vw; min-height: 110px; }
+    .photo-box:hover .hover-info {
+        transform: translateY(0);
+    }
 
-    /* Avoid text-selection or focus outlines causing horizontal overflow */
-    .card-inner-link { word-break: break-word; }
+    .photo-box:hover {
+        transform: translateY(-4px);
+    }
+
+    .cover {
+        height: max(280px, 55vh);
+    }
+
+    .site-footer {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .footer-inner {
+        max-width: 100%;
+        padding: 16px var(--page-padding);
+    }
+
+    .footer-top,
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .footer-bottom-right {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px 12px;
+    }
 }
 
 /* Category buttons under the about-me section */
@@ -762,10 +830,26 @@ a:focus {
 
 /* Responsive: stack vertically on narrow screens */
 @media (max-width:760px){
-    .work-card{ flex-direction:column; align-items:flex-start; padding:14px; }
-    .work-cover{ width: 100%; height: auto; aspect-ratio: 1 / 1; }
+    html, body {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    .work-card{
+        flex-direction:column;
+        align-items:flex-start;
+        padding:14px;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+    }
+    .work-cover{ width: 100%; height: auto; aspect-ratio: 1 / 1; flex: 0 0 auto; }
     .work-cover img{ height: auto; }
-    .work-info{ width: 100%; }
+    .work-info{ width: 100%; min-width: 0; }
+    .work-list{ padding-inline: var(--page-padding); }
+    .price-list{ width: 100%; max-width: 100%; }
+    .page-content{ overflow-x: hidden; }
+    .photo-box{ width: 100%; max-width: 100%; }
 }
 
 .cat-btn{
@@ -803,7 +887,7 @@ a:focus {
 }
 
 @media (max-width:560px){
-    .cat-btn--large{ width: calc(100% - 48px); height: 56px; }
+    .cat-btn--large{ width: 100%; max-width: 100%; height: 56px; }
 }
 
 .cat-btn:hover,
@@ -817,7 +901,14 @@ a:focus {
 
 @media (max-width:560px){
     .category-buttons{ justify-content:center; }
-    .cat-btn{ flex: 1 1 calc(50% - 16px); min-width: 120px; width: auto; height: 44px; text-align:center; }
+    .cat-btn{
+        flex: 1 1 calc((100% - 12px) / 2);
+        min-width: 0;
+        width: auto;
+        height: 44px;
+        text-align:center;
+        font-size: 0.92rem;
+    }
 }
 /* myart-specific hint positioning and arrow animation */
 .myart-page .work-hint{
@@ -857,10 +948,10 @@ a:focus {
 }
 
 @media (max-width:760px){
-  /* reduce lift on small screens */
+  /* reduce lift on small screens; drop scale to avoid horizontal overflow */
   .myart-page .work-card:hover,
   .myart-page .work-card:focus-within{
-    transform: translateY(-6px) scale(1.01);
+    transform: translateY(-4px);
     box-shadow: 0 18px 36px rgba(0,0,0,0.5);
   }
 }
@@ -878,7 +969,7 @@ a:focus {
 @media (max-width:760px){
   .work-list .work-card:hover,
   .work-list .work-card:focus-within{
-    transform: translateY(-6px) scale(1.01);
+    transform: translateY(-4px);
     box-shadow: 0 18px 36px rgba(0,0,0,0.5);
   }
 }
@@ -937,5 +1028,19 @@ a:focus {
 .card-inner-link:focus{ outline: 2px solid rgba(255,255,255,0.12); outline-offset: 3px; }
 
 @media (max-width:760px){
-  .card-inner-link{ flex-direction:column; align-items:flex-start; gap:12px; }
+  .card-inner-link{ flex-direction:column; align-items:flex-start; gap:12px; min-width: 0; }
+}
+
+/* Tablet / small-screen overflow guards (desktop layout unchanged above 760px) */
+@media (max-width: 760px) {
+    .site-footer {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        row-gap: 6px;
+    }
 }
