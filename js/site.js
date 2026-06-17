@@ -104,7 +104,12 @@
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
 }
-.footer-inner .footer-left{ font-weight:700; }
+.footer-inner .footer-left{
+  font-weight:700;
+  color: #000; /* ensure name is black */
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem); /* larger, responsive */
+  line-height: 1;
+}
 .footer-inner .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
 .footer-inner .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
 .footer-inner .footer-right a:hover{ text-decoration: underline; opacity:1; }
