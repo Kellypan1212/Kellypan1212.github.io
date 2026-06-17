@@ -46,6 +46,13 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Remove underline when links are clicked/active/visited/focused, but keep hover underline for affordance */
+a:active,
+a:visited,
+a:focus {
+    text-decoration: none;
+}
+
 /* ==========================================================================
    Navigation
    ========================================================================== */
