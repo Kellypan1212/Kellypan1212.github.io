@@ -113,6 +113,15 @@
 .footer-inner .footer-right{ display:flex; gap: clamp(12px, 3vw, 28px); align-items:center; }
 .footer-inner .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
 .footer-inner .footer-right a:hover{ text-decoration: underline; opacity:1; }
+
+/* footer social links */
+.footer-social{ display:flex; gap: 12px; align-items:center; }
+.footer-social a{ color: #000; text-decoration:none; opacity:0.95; font-size:0.95rem; }
+.footer-social a:hover{ text-decoration:underline; opacity:1; }
+
+@media (max-width:1100px){
+  .footer-social{ justify-content:center; }
+}
 /* Responsive fallback: on narrow viewports allow height to auto and stack content */
 @media (max-width:1100px){
   .site-footer{ height: auto; padding: 12px 0; }
@@ -131,12 +140,21 @@
     footer.innerHTML = `
         <div class="footer-inner">
             <div class="footer-left">稀蝸</div>
+
             <nav class="footer-right" aria-label="頁尾導覽">
                 <a href="works.html">作品預覽</a>
                 <a href="price.html">價目表</a>
                 <a href="notice.html">委託需知</a>
                 <a href="contact.html">聯絡我</a>
             </nav>
+
+            <div class="footer-social" aria-label="社群連結">
+                <a href="https://www.facebook.com/cgouo.pa/?rdid=EVFegre5W4eUPr10">Facebook</a>
+                <a href="https://x.com/cgouo_">X</a>
+                <a href="https://www.instagram.com/cgouo_/">Instagram</a>
+                <a href="https://www.threads.com/@cgouo_">Threads</a>
+                <a href="https://www.pixiv.net/users/71210427?utm_source=threads&utm_medium=social&utm_content=link_in_bio">Pixiv</a>
+            </div>
         </div>
     `;
 
