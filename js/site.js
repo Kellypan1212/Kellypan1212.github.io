@@ -79,7 +79,7 @@
     const footerCSS = `
 /* Make footer background full-bleed and fixed height, remove horizontal gaps */
 .site-footer{
-  background: #ffc926;
+  background: #F5C542;
   width: 100vw;               /* full viewport width */
   margin-left: calc(50% - 50vw); /* neutralize any constrained container */
   margin-right: calc(50% - 50vw);
