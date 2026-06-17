@@ -100,7 +100,7 @@
   align-items:stretch;
   justify-content:flex-start; /* align content to top */
   gap: 12px;
-  padding: 8px 28px;        /* reduce top padding so content shifts upward */
+  padding: 14px 28px;        /* slightly increased top padding to nudge content downward */
   box-sizing:border-box;
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
