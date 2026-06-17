@@ -689,6 +689,18 @@ a:focus {
     transform: translateX(6px);
 }
 
+/* Large modifier for a single prominent button (e.g., contact page '私訊我FB') */
+.cat-btn--large{
+    width: 200px;
+    height: 64px;
+    font-size: 1.1rem;
+    padding: 0 18px;
+}
+
+@media (max-width:560px){
+    .cat-btn--large{ width: calc(100% - 48px); height: 56px; }
+}
+
 .cat-btn:hover,
 .cat-btn:focus{
     transform: translateY(-6px);
