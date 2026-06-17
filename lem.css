@@ -504,33 +504,6 @@ a:focus {
     filter: brightness(0.95);
 }
 
-/* Title overlay styling kept consistent and animated */
-.overlay-text {
-    position: absolute;
-    left: clamp(16px, 4vw, 32px);
-    top: 12px;
-    color: #fff;
-    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-shadow: var(--text-shadow);
-    transition: transform 0.35s ease, color 0.2s ease;
-}
-
-.photo-box:hover .overlay-text {
-    transform: translateY(-2px);
-    color: #fff;
-}
-
-/* Ensure hover-info still appears nicely */
-.hover-info {
-    transition: transform 0.45s ease, opacity 0.45s ease;
-}
-
-.photo-box:hover .hover-info {
-    opacity: 1;
-    transform: translate(0, -50%);
-}
 
 @media (max-width:560px){
     .photo-box{ height: 110px; }
