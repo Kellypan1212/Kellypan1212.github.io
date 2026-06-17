@@ -432,7 +432,7 @@ a:hover {
    ========================================================================== */
 
 .price-list {
-    max-width: 820px;
+    width: min(95vw, 1600px); /* allow near-full content width while capping at 1600px */
     margin: 0 auto;
 }
 
