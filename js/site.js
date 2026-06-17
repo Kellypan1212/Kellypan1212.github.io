@@ -107,7 +107,10 @@
 }
 
 .footer-top{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
-.footer-bottom{ display:flex; align-items:center; justify-content:center; gap:18px; }
+.footer-bottom{ display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.footer-bottom-left{ /* spacer so bottom row aligns with top left */
+  min-width: 160px;
+}
 
 .footer-inner .footer-left{
   font-weight:700;
@@ -119,13 +122,14 @@
 .footer-inner .footer-right a{ color: #000; text-decoration:none; opacity:0.95; }
 .footer-inner .footer-right a:hover{ text-decoration: underline; opacity:1; }
 
-/* footer social links */
-.footer-social{ display:flex; gap: 12px; align-items:center; }
-.footer-social a{ color: #000; text-decoration:none; opacity:0.95; font-size:0.95rem; }
-.footer-social a:hover{ text-decoration:underline; opacity:1; }
+/* footer social links (bottom-right) */
+.footer-bottom-right{ display:flex; gap: 12px; align-items:center; }
+.footer-bottom-right a{ color: rgba(0,0,0,0.6); text-decoration:none; font-size:0.95rem; }
+.footer-bottom-right a:hover{ text-decoration:underline; color: rgba(0,0,0,0.85); }
 
 @media (max-width:1100px){
-  .footer-social{ justify-content:center; }
+  .footer-bottom-right{ justify-content:center; }
+  .footer-bottom-left{ display:none; }
 }
 /* Responsive fallback: on narrow viewports allow height to auto and stack content */
 @media (max-width:1100px){
@@ -155,11 +159,14 @@
             </div>
 
             <div class="footer-bottom" aria-label="社群連結">
-                <a href="https://www.facebook.com/cgouo.pa/?rdid=EVFegre5W4eUPr10">Facebook</a>
-                <a href="https://x.com/cgouo_">X</a>
-                <a href="https://www.instagram.com/cgouo_/">Instagram</a>
-                <a href="https://www.threads.com/@cgouo_">Threads</a>
-                <a href="https://www.pixiv.net/users/71210427?utm_source=threads&utm_medium=social&utm_content=link_in_bio">Pixiv</a>
+                <div class="footer-bottom-left" aria-hidden="true"></div>
+                <div class="footer-bottom-right">
+                    <a href="https://www.facebook.com/cgouo.pa/?rdid=EVFegre5W4eUPr10">Facebook</a>
+                    <a href="https://x.com/cgouo_">X</a>
+                    <a href="https://www.instagram.com/cgouo_/">Instagram</a>
+                    <a href="https://www.threads.com/@cgouo_">Threads</a>
+                    <a href="https://www.pixiv.net/users/71210427?utm_source=threads&utm_medium=social&utm_content=link_in_bio">Pixiv</a>
+                </div>
             </div>
         </div>
     `;
