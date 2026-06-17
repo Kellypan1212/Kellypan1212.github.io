@@ -446,17 +446,16 @@ a:hover {
 
 .photo-grid {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* single column, top-to-bottom */
     gap: clamp(18px, 3vw, 28px);
-    align-items: center;
-    padding: 0; /* rely on .page-content padding for side margins */
+    align-items: center; /* center cards within content area */
 }
 
-/* Single-column, flattened card by default; expands on hover */
+/* Layout/size only: make cards near-full-width while preserving existing hover/animation rules */
 .photo-box {
-    width: 100%;
-    max-width: 100%;            /* occupy available content width (respecting page padding) */
-    height: 240px;             /* flattened default height (扁長設計) */
+    width: calc(100% - (var(--page-padding) * 2)); /* near full content width while preserving page padding */
+    max-width: 1100px; /* cap on very wide screens */
+    height: 120px;                 /* keep flattened default */
     position: relative;
     overflow: hidden;
     border-radius: 12px;
@@ -464,53 +463,38 @@ a:hover {
     transition: transform 0.45s ease, box-shadow 0.45s ease, height 0.45s ease;
     will-change: transform, box-shadow, height;
     background: #000; /* fallback while image loads */
-}
-
-/* Frosted/matte overlay to preserve matte look */
-.photo-box::after{
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(26,26,26,0.28); /* subtle dark matte */
-    backdrop-filter: blur(6px) saturate(0.95);
-    -webkit-backdrop-filter: blur(6px) saturate(0.95);
-    pointer-events: none;
-    transition: background 0.35s ease, backdrop-filter 0.35s ease;
+    margin: 0 auto; /* center inside the flex column */
 }
 
 .photo-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.25);    /* slightly zoomed when flattened */
+    /* zoomed/cropped appearance when flattened */
+    transform: scale(1.35);
     transition: transform 0.45s ease, filter 0.45s ease;
-    filter: brightness(0.85);
+    filter: brightness(0.6);
 }
 
-/* Hover: card expands toward original proportion and lifts. Keep matte but slightly reduce its opacity */
+/* Hover: card expands (closer to original proportions) and lifts */
 .photo-box:hover {
-    transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
-    height: 520px; /* expand to reveal more of the image */
-}
-
-.photo-box:hover::after{
-    background: rgba(26,26,26,0.18);
-    backdrop-filter: blur(4px) saturate(0.98);
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 26px 46px rgba(0, 0, 0, 0.55);
+    height: 220px; /* expands toward original/less flattened */
 }
 
 .photo-box:hover img {
-    transform: scale(1.02); /* reveal more of the image */
-    filter: brightness(1);
+    transform: scale(1.05); /* reveal more of the image */
+    filter: brightness(0.95);
 }
 
-/* Title overlay styling kept consistent and animated; place near bottom for flattened cards */
+/* Title overlay styling kept consistent and animated */
 .overlay-text {
     position: absolute;
     left: clamp(16px, 4vw, 32px);
-    bottom: 18px;
+    top: 12px;
     color: #fff;
-    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
     font-weight: 700;
     letter-spacing: 0.04em;
     text-shadow: var(--text-shadow);
@@ -518,35 +502,74 @@ a:hover {
 }
 
 .photo-box:hover .overlay-text {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    color: #fff;
 }
 
-/* Ensure hover-info appears nicely */
+/* Ensure hover-info still appears nicely */
 .hover-info {
     transition: transform 0.45s ease, opacity 0.45s ease;
-    position: absolute;
-    right: 18px;
-    bottom: 18px;
 }
 
 .photo-box:hover .hover-info {
     opacity: 1;
-    transform: translateY(-6px);
-}
-
-@media (min-width:1100px){
-    /* on wide screens, allow cards to have generous max-width close to content width */
-    .photo-box{ max-width: 980px; }
-}
-
-@media (max-width:880px){
-    .photo-box{ height: 360px; }
-    .photo-box:hover{ height: 440px; }
+    transform: translate(0, -50%);
 }
 
 @media (max-width:560px){
-    .photo-box{ height: 260px; }
-    .photo-box:hover{ height: 300px; }
+    .photo-box{ height: 110px; }
+    .photo-box:hover{ height: 140px; }
+}
+
+.overlay-text {
+    position: absolute;
+    left: clamp(20px, 4vw, 40px);
+    bottom: clamp(18px, 4vw, 30px);
+    color: white;
+    font-size: clamp(2rem, 7vw, 3rem);
+    font-weight: bold;
+    text-shadow: var(--text-shadow);
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 0.45s ease, opacity 0.45s ease;
+}
+
+.photo-box:hover .overlay-text {
+    transform: translateY(28px);
+    opacity: 0;
+}
+
+.hover-info {
+    position: absolute;
+    top: 50%;
+    right: clamp(20px, 4vw, 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    color: white;
+    text-align: left;
+    opacity: 0;
+    transform: translate(-24px, -50%);
+    transition: transform 0.45s ease, opacity 0.45s ease;
+    pointer-events: none;
+}
+
+.hover-info span:first-child {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 700;
+}
+
+.hover-info span:last-child {
+    font-size: clamp(1rem, 2.4vw, 1.15rem);
+}
+
+.photo-box:hover .hover-info {
+    opacity: 1;
+    transform: translate(0, -50%);
 }
 
 /* ==========================================================================
