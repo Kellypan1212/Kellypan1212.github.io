@@ -96,14 +96,19 @@
   width: 100%;
   height: 100%;
   display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 18px;
-  padding: 24px 28px;        /* internal padding for content spacing */
+  flex-direction:column;     /* stack top and bottom rows */
+  align-items:stretch;
+  justify-content:center;
+  gap: 12px;
+  padding: 18px 28px;        /* internal padding for content spacing */
   box-sizing:border-box;
   font-family: inherit;
   font-size: clamp(0.95rem, 2.1vw, 1rem);
 }
+
+.footer-top{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.footer-bottom{ display:flex; align-items:center; justify-content:center; gap:18px; }
+
 .footer-inner .footer-left{
   font-weight:700;
   color: #000; /* ensure name is black */
@@ -139,16 +144,17 @@
     footer.setAttribute('role', 'contentinfo');
     footer.innerHTML = `
         <div class="footer-inner">
-            <div class="footer-left">稀蝸</div>
+            <div class="footer-top">
+                <div class="footer-left">稀蝸</div>
+                <nav class="footer-right" aria-label="頁尾導覽">
+                    <a href="works.html">作品預覽</a>
+                    <a href="price.html">價目表</a>
+                    <a href="notice.html">委託需知</a>
+                    <a href="contact.html">聯絡我</a>
+                </nav>
+            </div>
 
-            <nav class="footer-right" aria-label="頁尾導覽">
-                <a href="works.html">作品預覽</a>
-                <a href="price.html">價目表</a>
-                <a href="notice.html">委託需知</a>
-                <a href="contact.html">聯絡我</a>
-            </nav>
-
-            <div class="footer-social" aria-label="社群連結">
+            <div class="footer-bottom" aria-label="社群連結">
                 <a href="https://www.facebook.com/cgouo.pa/?rdid=EVFegre5W4eUPr10">Facebook</a>
                 <a href="https://x.com/cgouo_">X</a>
                 <a href="https://www.instagram.com/cgouo_/">Instagram</a>
