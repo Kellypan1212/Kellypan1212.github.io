@@ -5,13 +5,290 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二創</title>
     <link rel="stylesheet" href="lem.css">
+    <style>
+        .gallery-wrap{ max-width:1200px; margin: 0 auto; padding: 12px var(--page-padding); box-sizing: border-box; }
+        .gallery-title{ margin: 0 0 18px 0; font-size: clamp(1.4rem,4vw,1.8rem); font-weight:700; color:#fff; text-align:center; }
+        .gallery-grid{
+            display:grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: clamp(10px, 2vw, 16px);
+            align-items: start;
+        }
+        .thumb{
+            width:100%;
+            aspect-ratio: 1 / 1;
+            overflow:hidden;
+            border-radius:10px;
+            background:#0f0f0f;
+            display:inline-grid;
+            place-items:center;
+            cursor:pointer;
+            position:relative;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+            border:1px solid rgba(255,255,255,0.03);
+        }
+        .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+        .thumb:hover{ transform: translateY(-6px) scale(1.02); box-shadow:0 30px 60px rgba(0,0,0,0.6); }
+        .thumb-placeholder{
+            color: rgba(255,255,255,0.78);
+            font-size: 0.95rem;
+            text-align:center;
+            padding: 6px 10px;
+            line-height:1.2;
+        }
+        /* R18 card: hover blur + overlay text */
+        .r18-card{ display:inline-grid; position:relative; overflow:hidden; border-radius:10px; }
+        .r18-card img{ width:100%; height:100%; object-fit:cover; display:block; transition: filter 0.24s ease, transform 0.24s ease; }
+        .r18-card .r18-overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1rem; background: rgba(0,0,0,0.35); opacity:0; transition: opacity 0.22s ease; pointer-events:none; }
+        .r18-card:hover img{ filter: blur(4px) brightness(0.8); transform: scale(1.02); }
+        .r18-card:hover .r18-overlay{ opacity:1; pointer-events:none; }
+
+        .lb-overlay{ position:fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition: opacity 0.28s ease; }
+        .lb-overlay.is-open{ opacity:1; pointer-events:auto; }
+        .lb-content{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; overflow:auto; }
+        .lb-content .lb-image{ position:relative; left:auto; top:auto; will-change: auto; max-width: calc(100% - 40px); max-height: calc(100% - 40px); }
+        .lb-image{ display:block; width:auto; height:auto; max-width:100%; max-height:100%; box-shadow: 0 30px 60px rgba(0,0,0,0.6); transition: transform 0.25s ease; transform-origin: center center; }
+        .lb-image.zoomed{ transform: scale(2); }
+        .lb-close{ position:fixed; top:18px; right:18px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:18px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1001; }
+        .lb-close:hover{ transform: translateY(-4px); }
+        .lb-nav{ position:fixed; top:50%; transform:translateY(-50%); background: rgba(0,0,0,0.36); color:#fff; border:0; width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:28px; z-index:1001; cursor:pointer; }
+        .lb-nav:hover{ background: rgba(0,0,0,0.5); }
+        .lb-prev{ left:22px; }
+        .lb-next{ right:22px; }
+
+        @media (max-width:1100px){ .gallery-grid{ grid-template-columns: repeat(4,1fr); } }
+        @media (max-width:820px){ .gallery-grid{ grid-template-columns: repeat(3,1fr); } }
+        @media (max-width:560px){ .gallery-grid{ grid-template-columns: repeat(2,1fr); } }
+        @media (max-width:380px){ .gallery-grid{ grid-template-columns: repeat(1,1fr); } }
+    </style>
 </head>
 <body>
     <div id="site-nav"></div>
 
-    <main class="page-content">
-        <!-- 二創作品內容 -->
+    <main class="page-content myart-page">
+        <section class="gallery-wrap">
+            <h1 class="gallery-title">二創</h1>
+            <div class="gallery-grid" id="galleryGrid">
+            </div>
+        </section>
+
+        <div id="lightbox" class="lb-overlay" aria-hidden="true">
+            <div class="lb-content" role="dialog" aria-modal="true">
+                <button class="lb-close" id="lbClose" aria-label="關閉">✕</button>
+                <img src="" alt="預覽圖片" id="lbImage" class="lb-image">
+            </div>
+            <button class="lb-nav lb-prev" id="lbPrev" aria-label="上一張">‹</button>
+            <button class="lb-nav lb-next" id="lbNext" aria-label="下一張">›</button>
+        </div>
     </main>
+
+    <script>
+        (async function(){
+            const grid = document.getElementById('galleryGrid');
+            try{
+                const res = await fetch('phoo.html');
+                if(!res.ok) throw new Error('phoo.html 無法載入');
+                const text = await res.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const srcs = Array.from(doc.querySelectorAll('img'))
+                    .map(img => img.getAttribute('src'))
+                    .filter(Boolean);
+                const unique = [...new Set(srcs)];
+
+                if(unique.length === 0){
+                    const note = document.createElement('p');
+                    note.style.color = 'rgba(255,255,255,0.6)';
+                    note.textContent = 'phoo.html 中未找到圖片，請檢查 phoo.html 或放入圖片。';
+                    grid.appendChild(note);
+                    return;
+                }
+
+                // 選取 hh 底下的前 9 張圖，並再從上方挑一張不同的圖，共 10 張
+                const hhCandidates = unique.filter(s => s.includes('/hh/'));
+                const hhSelected = hhCandidates.slice(0, 9);
+                let extra = unique.find(s => !hhSelected.includes(s));
+                if(!extra && unique.length > 0) extra = unique[0];
+                const wanted = [...hhSelected];
+                if(extra) wanted.push(extra);
+
+                // 合併 unique 與 wanted，保持順序並去重，確保 wanted 的圖至少出現在清單中
+                const finalList = [];
+                const seen = new Set();
+                unique.concat(wanted).forEach(s => { if(!seen.has(s)){ finalList.push(s); seen.add(s); }});
+
+                // 將圖片清單存到全域變數以供 Lightbox 切換使用
+                window.fanartImageList = finalList;
+
+                // 在最右下角放置固定 R18 卡（使用指定檔案），如已在 finalList 中則先移除以避免重複
+                (function(){
+                    const fixedR18 = 'ph/fanart/fanR18/IMG_0840.JPG';
+                    const ix = finalList.indexOf(fixedR18);
+                    if(ix !== -1) finalList.splice(ix, 1);
+
+                    const a = document.createElement('a');
+                    a.className = 'r18-card thumb';
+                    a.href = 'https://x.com/cgouo_nsfw';
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                    a.setAttribute('aria-label','查看 R18 作品');
+
+                    const imgEl = document.createElement('img');
+                    imgEl.src = fixedR18;
+                    imgEl.alt = 'R18 作品';
+
+                    const overlay = document.createElement('div');
+                    overlay.className = 'r18-overlay';
+                    overlay.textContent = '查看 R18 作品';
+
+                    a.appendChild(imgEl);
+                    a.appendChild(overlay);
+
+                    grid.appendChild(a);
+                })();
+
+                finalList.forEach((src, idx) => {
+                    const thumb = document.createElement('button');
+                    thumb.className = 'thumb';
+                    thumb.type = 'button';
+
+                    const imgEl = document.createElement('img');
+                    imgEl.src = src;
+                    imgEl.setAttribute('data-full', src);
+                    imgEl.alt = `Fanart ${idx+1}`;
+
+                    thumb.appendChild(imgEl);
+
+                    imgEl.addEventListener('error', ()=>{
+                        imgEl.style.display = 'none';
+                        if(!thumb.querySelector('.thumb-placeholder')){
+                            const ph = document.createElement('div');
+                            ph.className = 'thumb-placeholder';
+                            ph.textContent = `請將 ${src} 放置到此位置（或修正 phoo.html 的路徑）`;
+                            thumb.appendChild(ph);
+                        }
+                    });
+
+                    thumb.addEventListener('click', ()=>{
+                        if(getComputedStyle(imgEl).display === 'none') return;
+                        openLightboxByIndex(idx);
+                    });
+
+                    grid.appendChild(thumb);
+                });
+
+            }catch(err){
+                console.error(err);
+                const note = document.createElement('p');
+                note.style.color = 'rgba(255,255,255,0.6)';
+                note.textContent = '載入 phoo.html 時發生錯誤，請確認檔案存在於網站根目錄。';
+                grid.appendChild(note);
+            }
+        })();
+
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImage');
+        const lbClose = document.getElementById('lbClose');
+
+        function openLightbox(src, alt){
+            lbImg.src = src;
+            lbImg.alt = alt || '';
+            lbImg.style.width = '';
+            lbImg.style.height = '';
+            lbImg.style.transform = '';
+            lb.classList.add('is-open');
+            lb.setAttribute('aria-hidden','false');
+            document.body.style.overflow = 'hidden';
+            lbClose.focus();
+        }
+
+        function closeLightbox(){
+            lb.classList.remove('is-open');
+            lb.setAttribute('aria-hidden','true');
+            lbImg.src = '';
+            lbImg.style.width = '';
+            lbImg.style.height = '';
+            lbImg.style.transform = '';
+            document.body.style.overflow = '';
+            currentIndex = -1;
+        }
+
+        lbClose.addEventListener('click', closeLightbox);
+        // 點擊遮罩（圖片以外區域）關閉：若點擊目標不是圖片、也不是導航或關閉按鈕，則關閉
+        lb.addEventListener('click', (e)=>{
+            const t = e.target;
+            if(t === lbImg) return; // 點圖片不關閉
+            if(t === lbClose) return; // 點關閉按鈕由其 handler 處理
+            if(t.closest && t.closest('.lb-nav')) return; // 點左右按鈕不關閉
+            // 其他位置（含 .lb-content 的空白處）視為背景，關閉 lightbox
+            closeLightbox();
+        });
+
+        // image list & navigation
+        let currentIndex = -1;
+        function showImageAt(idx){
+            const list = window.fanartImageList || [];
+            if(!list || list.length === 0) return;
+            currentIndex = ((idx % list.length) + list.length) % list.length;
+            lbImg.src = list[currentIndex];
+            lbImg.alt = `Fanart ${currentIndex+1}`;
+            lbImg.style.width = '';
+            lbImg.style.height = '';
+            lbImg.style.transform = '';
+        }
+        function openLightboxByIndex(idx){
+            showImageAt(idx);
+            lb.classList.add('is-open');
+            lb.setAttribute('aria-hidden','false');
+            document.body.style.overflow = 'hidden';
+            lbClose.focus();
+        }
+        const lbPrev = document.getElementById('lbPrev');
+        const lbNext = document.getElementById('lbNext');
+        if(lbPrev) lbPrev.addEventListener('click', (e)=>{ e.stopPropagation(); const list = window.fanartImageList || []; if(list.length===0) return; currentIndex = (currentIndex - 1 + list.length) % list.length; showImageAt(currentIndex); });
+        if(lbNext) lbNext.addEventListener('click', (e)=>{ e.stopPropagation(); const list = window.fanartImageList || []; if(list.length===0) return; currentIndex = (currentIndex + 1) % list.length; showImageAt(currentIndex); });
+
+        document.addEventListener('keydown', (e)=>{
+            if(!lb.classList.contains('is-open')) return;
+            if(e.key === 'Escape') { closeLightbox(); return; }
+            const list = window.fanartImageList || [];
+            if(list.length === 0) return;
+            if(e.key === 'ArrowLeft'){
+                currentIndex = (currentIndex - 1 + list.length) % list.length;
+                showImageAt(currentIndex);
+            } else if(e.key === 'ArrowRight'){
+                currentIndex = (currentIndex + 1) % list.length;
+                showImageAt(currentIndex);
+            }
+        });
+
+        // wheel on overlay: vertical scroll => prev/next (throttled)
+        (function(){
+            let wheelLocked = false;
+            const THROTTLE_MS = 200;
+            lb.addEventListener('wheel', function(e){
+                if(!lb.classList.contains('is-open')) return;
+                e.preventDefault();
+                const list = window.fanartImageList || [];
+                if(list.length === 0) return;
+                if(wheelLocked) return;
+                const delta = e.deltaY;
+                if(Math.abs(delta) < 2) return; // ignore tiny movements
+                if(delta > 0){
+                    currentIndex = (currentIndex + 1) % list.length;
+                } else {
+                    currentIndex = (currentIndex - 1 + list.length) % list.length;
+                }
+                showImageAt(currentIndex);
+                wheelLocked = true;
+                setTimeout(()=>{ wheelLocked = false; }, THROTTLE_MS);
+            }, { passive: false });
+        })();
+
+        // prevent default drag
+        lbImg.ondragstart = () => false;
+    </script>
 
     <script src="js/site.js"></script>
 </body>
