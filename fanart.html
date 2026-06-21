@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>二創</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="lem.css">
     <style>
         .gallery-wrap{ max-width:1200px; margin: 0 auto; padding: 12px var(--page-padding); box-sizing: border-box; }
@@ -52,8 +53,8 @@
         .lb-image.zoomed{ transform: scale(2); }
         .lb-close{ position:fixed; top:18px; right:18px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:18px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1001; }
         .lb-close:hover{ transform: translateY(-4px); }
-        .lb-nav{ position:fixed; top:50%; transform:translateY(-50%); background: rgba(0,0,0,0.36); color:#fff; border:0; width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:28px; z-index:1001; cursor:pointer; }
-        .lb-nav:hover{ background: rgba(0,0,0,0.5); }
+        .lb-nav{ position:fixed; top:50%; transform:translateY(-50%); background: rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.08); width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:28px; z-index:1001; cursor:pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+        .lb-nav:hover{ background: rgba(255,255,255,0.16); color:#000; border-color: rgba(255,255,255,0.18); }
         .lb-prev{ left:22px; }
         .lb-next{ right:22px; }
 
@@ -64,7 +65,7 @@
     </style>
 </head>
 <body>
-    <div id="site-nav"></div>
+    <div id="site-nav" class="navbar navbar-expand-lg"></div>
 
     <main class="page-content myart-page">
         <section class="gallery-wrap">
@@ -75,11 +76,11 @@
 
         <div id="lightbox" class="lb-overlay" aria-hidden="true">
             <div class="lb-content" role="dialog" aria-modal="true">
-                <button class="lb-close" id="lbClose" aria-label="關閉">✕</button>
+                <button class="lb-close btn btn-outline-light" id="lbClose" aria-label="關閉">✕</button>
                 <img src="" alt="預覽圖片" id="lbImage" class="lb-image">
             </div>
-            <button class="lb-nav lb-prev" id="lbPrev" aria-label="上一張">‹</button>
-            <button class="lb-nav lb-next" id="lbNext" aria-label="下一張">›</button>
+            <button class="lb-nav lb-prev btn btn-light" id="lbPrev" aria-label="上一張">‹</button>
+            <button class="lb-nav lb-next btn btn-light" id="lbNext" aria-label="下一張">›</button>
         </div>
     </main>
 
@@ -121,32 +122,10 @@
                 // 將圖片清單存到全域變數以供 Lightbox 切換使用
                 window.fanartImageList = finalList;
 
-                // 在最右下角放置固定 R18 卡（使用指定檔案），如已在 finalList 中則先移除以避免重複
-                (function(){
-                    const fixedR18 = 'ph/fanart/fanR18/IMG_0840.JPG';
-                    const ix = finalList.indexOf(fixedR18);
-                    if(ix !== -1) finalList.splice(ix, 1);
-
-                    const a = document.createElement('a');
-                    a.className = 'r18-card thumb';
-                    a.href = 'https://x.com/cgouo_nsfw';
-                    a.target = '_blank';
-                    a.rel = 'noopener';
-                    a.setAttribute('aria-label','查看 R18 作品');
-
-                    const imgEl = document.createElement('img');
-                    imgEl.src = fixedR18;
-                    imgEl.alt = 'R18 作品';
-
-                    const overlay = document.createElement('div');
-                    overlay.className = 'r18-overlay';
-                    overlay.textContent = '查看 R18 作品';
-
-                    a.appendChild(imgEl);
-                    a.appendChild(overlay);
-
-                    grid.appendChild(a);
-                })();
+                // 移除 finalList 中的固定 R18 圖片（避免重複），但不立即插入卡片，會在縮圖生成完後再加入最後一個位置
+                const fixedR18 = 'ph/fanart/fanR18/IMG_0840.JPG';
+                const ix = finalList.indexOf(fixedR18);
+                if(ix !== -1) finalList.splice(ix, 1);
 
                 finalList.forEach((src, idx) => {
                     const thumb = document.createElement('button');
@@ -177,6 +156,30 @@
 
                     grid.appendChild(thumb);
                 });
+
+                // 在所有縮圖生成完成後，把固定 R18 卡片加入為最後一個（右下角）
+                (function(){
+                    const fixedR18 = 'ph/fanart/fanR18/IMG_0840.JPG';
+                    const a = document.createElement('a');
+                    a.className = 'r18-card thumb';
+                    a.href = 'https://x.com/cgouo_nsfw';
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                    a.setAttribute('aria-label','查看 R18 作品');
+
+                    const imgEl = document.createElement('img');
+                    imgEl.src = fixedR18;
+                    imgEl.alt = 'R18 作品';
+
+                    const overlay = document.createElement('div');
+                    overlay.className = 'r18-overlay';
+                    overlay.textContent = '查看 R18 作品';
+
+                    a.appendChild(imgEl);
+                    a.appendChild(overlay);
+
+                    grid.appendChild(a);
+                })();
 
             }catch(err){
                 console.error(err);
@@ -290,6 +293,7 @@
         lbImg.ondragstart = () => false;
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/site.js"></script>
 </body>
 </html>
