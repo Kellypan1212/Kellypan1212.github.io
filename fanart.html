@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="lem.css">
     <style>
         .gallery-wrap{ max-width:1200px; margin: 0 auto; padding: 12px var(--page-padding); box-sizing: border-box; }
-        .gallery-title{ margin: 0 0 18px 0; font-size: clamp(1.4rem,4vw,1.8rem); font-weight:700; color:#fff; text-align:center; }
+        .gallery-title{ margin: 0 0 clamp(24px, 4vw, 32px); font-size: clamp(1.6rem, 4.5vw, 2.2rem); font-weight:700; letter-spacing:0.08em; color:#fff; text-align:center; }
         .gallery-grid{
             display:grid;
             grid-template-columns: repeat(5, 1fr);
@@ -47,12 +47,17 @@
 
         .lb-overlay{ position:fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition: opacity 0.28s ease; }
         .lb-overlay.is-open{ opacity:1; pointer-events:auto; }
-        .lb-content{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; overflow:auto; }
+        .lb-content{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; overflow:hidden; }
+        /* during drag we temporarily disable the image transition for smooth follow */
+        .lb-image.no-transition { transition: none !important; }
         .lb-content .lb-image{ position:relative; left:auto; top:auto; will-change: auto; max-width: calc(100% - 40px); max-height: calc(100% - 40px); }
-        .lb-image{ display:block; width:auto; height:auto; max-width:100%; max-height:100%; box-shadow: 0 30px 60px rgba(0,0,0,0.6); transition: transform 0.25s ease; transform-origin: center center; }
+        .lb-image{ display:block; width:auto; height:auto; max-width:100%; max-height:100%; box-shadow: 0 30px 60px rgba(0,0,0,0.6); transition: transform 0.16s ease; transform-origin: center center; }
         .lb-image.zoomed{ transform: scale(2); }
-        .lb-close{ position:fixed; top:18px; right:18px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:18px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1001; }
+        .lb-close{ position:fixed; top:18px; right:18px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:18px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1002; }
         .lb-close:hover{ transform: translateY(-4px); }
+        /* zoom toggle button placed left of close */
+        .lb-zoom{ position:fixed; top:18px; right:72px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:16px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1002; }
+        .lb-zoom:hover{ transform: translateY(-4px); }
         .lb-nav{ position:fixed; top:50%; transform:translateY(-50%); background: rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.08); width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:28px; z-index:1001; cursor:pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
         .lb-nav:hover{ background: rgba(255,255,255,0.16); color:#000; border-color: rgba(255,255,255,0.18); }
         .lb-prev{ left:22px; }
@@ -69,13 +74,14 @@
 
     <main class="page-content myart-page">
         <section class="gallery-wrap">
-            <h1 class="gallery-title">二創</h1>
+            <h1 class="gallery-title">FANART</h1>
             <div class="gallery-grid" id="galleryGrid">
             </div>
         </section>
 
         <div id="lightbox" class="lb-overlay" aria-hidden="true">
             <div class="lb-content" role="dialog" aria-modal="true">
+                <button class="lb-zoom btn btn-outline-light" id="lbZoom" aria-label="縮放">🔍</button>
                 <button class="lb-close btn btn-outline-light" id="lbClose" aria-label="關閉">✕</button>
                 <img src="" alt="預覽圖片" id="lbImage" class="lb-image">
             </div>
@@ -193,6 +199,15 @@
         const lb = document.getElementById('lightbox');
         const lbImg = document.getElementById('lbImage');
         const lbClose = document.getElementById('lbClose');
+        const lbZoom = document.getElementById('lbZoom');
+        // zoom / pan state
+        let isZoomed = false;
+        let scale = 1;
+        let tx = 0, ty = 0; // pan offsets in px
+        const MIN_SCALE = 1;
+        const MAX_SCALE = 4;
+        // suppress overlay clicks briefly after drag/animation
+        let suppressOverlayClickUntil = 0;
 
         function openLightbox(src, alt){
             lbImg.src = src;
@@ -220,9 +235,11 @@
         lbClose.addEventListener('click', closeLightbox);
         // 點擊遮罩（圖片以外區域）關閉：若點擊目標不是圖片、也不是導航或關閉按鈕，則關閉
         lb.addEventListener('click', (e)=>{
+            if(Date.now() < suppressOverlayClickUntil) return; // 被拖曳或動畫阻擋的短時段
             const t = e.target;
             if(t === lbImg) return; // 點圖片不關閉
             if(t === lbClose) return; // 點關閉按鈕由其 handler 處理
+            if(t === lbZoom) return; // 點縮放按鈕不關閉
             if(t.closest && t.closest('.lb-nav')) return; // 點左右按鈕不關閉
             // 其他位置（含 .lb-content 的空白處）視為背景，關閉 lightbox
             closeLightbox();
@@ -234,6 +251,8 @@
             const list = window.fanartImageList || [];
             if(!list || list.length === 0) return;
             currentIndex = ((idx % list.length) + list.length) % list.length;
+            // reset zoom/pan state when switching images
+            isZoomed = false; scale = 1; tx = 0; ty = 0;
             lbImg.src = list[currentIndex];
             lbImg.alt = `Fanart ${currentIndex+1}`;
             lbImg.style.width = '';
@@ -266,31 +285,233 @@
             }
         });
 
-        // wheel on overlay: vertical scroll => prev/next (throttled)
+        // Unified interaction: wheel behaves as zoom when zoomed, else vertical wheel switches images. Drag behaves as pan when zoomed, otherwise drag-to-switch.
         (function(){
+            // wheel throttling for switching when not zoomed
             let wheelLocked = false;
-            const THROTTLE_MS = 200;
+            const THROTTLE_MS = 160;
+
+            function applyTransform(){
+                // when scaled, use translate(tx,ty) scale(scale), otherwise clear transform
+                if(isZoomed && scale !== 1){
+                    lbImg.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+                } else {
+                    lbImg.style.transform = '';
+                }
+            }
+
+            // wheel handler
             lb.addEventListener('wheel', function(e){
                 if(!lb.classList.contains('is-open')) return;
-                e.preventDefault();
                 const list = window.fanartImageList || [];
-                if(list.length === 0) return;
+                if(isZoomed){
+                    // zoom in/out around cursor
+                    e.preventDefault();
+                    const rect = lbImg.getBoundingClientRect();
+                    const cx = e.clientX - rect.left; // cursor pos in image coords
+                    const cy = e.clientY - rect.top;
+                    const prevScale = scale;
+                    const delta = -e.deltaY; // invert so wheel up zooms in
+                    const Z_STEP = 0.12; // fine control
+                    if(delta > 0) scale = Math.min(MAX_SCALE, +(scale + Z_STEP).toFixed(3));
+                    else scale = Math.max(MIN_SCALE, +(scale - Z_STEP).toFixed(3));
+
+                    // adjust pan so zoom centers at cursor
+                    const relX = (cx - rect.width/2 - tx) / prevScale;
+                    const relY = (cy - rect.height/2 - ty) / prevScale;
+                    tx = tx - relX * (scale - prevScale);
+                    ty = ty - relY * (scale - prevScale);
+
+                    applyTransform();
+                    return;
+                }
+
+                // not zoomed: use vertical wheel to navigate (throttled)
+                e.preventDefault();
                 if(wheelLocked) return;
                 const delta = e.deltaY;
-                if(Math.abs(delta) < 2) return; // ignore tiny movements
-                if(delta > 0){
-                    currentIndex = (currentIndex + 1) % list.length;
-                } else {
-                    currentIndex = (currentIndex - 1 + list.length) % list.length;
-                }
+                if(Math.abs(delta) < 2) return;
+                if(list.length === 0) return;
+                if(delta > 0){ currentIndex = (currentIndex + 1) % list.length; }
+                else { currentIndex = (currentIndex - 1 + list.length) % list.length; }
                 showImageAt(currentIndex);
                 wheelLocked = true;
                 setTimeout(()=>{ wheelLocked = false; }, THROTTLE_MS);
             }, { passive: false });
-        })();
 
-        // prevent default drag
-        lbImg.ondragstart = () => false;
+            // prevent default drag
+            lbImg.ondragstart = () => false;
+
+            // pointer interactions
+            let pointerActive = false;
+            let pId = null;
+            let startX = 0, startY = 0;
+            let lastTx = 0, lastTy = 0;
+            let dx = 0, dy = 0;
+            const SWIPE_THRESHOLD = Math.max(120, Math.round(window.innerWidth * 0.12));
+
+            function onPointerDown(e){
+                if(!lb.classList.contains('is-open')) return;
+                if(e.pointerType === 'mouse' && e.button !== 0) return;
+                pId = e.pointerId;
+                pointerActive = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                dx = 0; dy = 0;
+                try{ e.target.setPointerCapture(pId); }catch(_){ }
+
+                if(isZoomed && scale > 1){
+                    // start pan
+                    lastTx = tx; lastTy = ty;
+                    lbImg.classList.add('no-transition');
+                    lbImg.style.cursor = 'grabbing';
+                } else {
+                    // start swipe (drag-to-switch)
+                    lbImg.classList.add('no-transition');
+                }
+            }
+
+            function onPointerMove(e){
+                if(!pointerActive || e.pointerId !== pId) return;
+                dx = e.clientX - startX;
+                dy = e.clientY - startY;
+                if(isZoomed && scale > 1){
+                    tx = lastTx + dx;
+                    ty = lastTy + dy;
+                    applyTransform();
+                } else {
+                    const max = window.innerWidth * 1.2;
+                    const txVis = Math.max(Math.min(dx, max), -max);
+                    lbImg.style.transform = `translateX(${txVis}px)`;
+                }
+            }
+
+            function onPointerUp(e){
+                if(!pointerActive || e.pointerId !== pId) return;
+                pointerActive = false;
+                try{ e.target.releasePointerCapture(pId); }catch(_){ }
+                lbImg.classList.remove('no-transition');
+                lbImg.style.cursor = '';
+
+                if(isZoomed && scale > 1){
+                    // pan ended: no snapping, just keep position
+                    suppressOverlayClickUntil = Date.now() + 150;
+                    return;
+                }
+
+                // handle swipe-to-switch
+                const absdx = Math.abs(dx);
+                if(absdx > SWIPE_THRESHOLD){
+                    const swipedLeft = dx < 0; // left swipe => next, right swipe => previous
+                    const list = window.fanartImageList || [];
+                    if(list.length > 0){
+                        const outX = swipedLeft ? -window.innerWidth : window.innerWidth; // current image moves in swipe direction
+                        lbImg.style.transition = 'transform 0.16s ease';
+                        lbImg.style.transform = `translateX(${outX}px)`;
+
+                        setTimeout(()=>{
+                            // update index according to swipe
+                            if(swipedLeft) currentIndex = (currentIndex + 1) % list.length;
+                            else currentIndex = (currentIndex - 1 + list.length) % list.length;
+
+                            const incomingX = swipedLeft ? window.innerWidth : -window.innerWidth; // incoming image starts opposite
+
+                            // position incoming image off-screen without transition
+                            lbImg.style.transition = 'none';
+                            lbImg.style.transform = `translateX(${incomingX}px)`;
+
+                            // swap image
+                            lbImg.src = list[currentIndex];
+                            lbImg.alt = `Fanart ${currentIndex+1}`;
+
+                            // animate incoming image to center
+                            requestAnimationFrame(()=>{
+                                requestAnimationFrame(()=>{
+                                    lbImg.style.transition = 'transform 0.16s ease';
+                                    lbImg.style.transform = '';
+                                });
+                            });
+
+                            // clear inline transition after animation
+                            setTimeout(()=>{ lbImg.style.transition = ''; }, 220);
+                        }, 160);
+
+                        suppressOverlayClickUntil = Date.now() + 300;
+                    }
+                } else {
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    lbImg.style.transform = '';
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                    suppressOverlayClickUntil = Date.now() + 160;
+                }
+
+                dx = dy = 0; pId = null;
+            }
+
+            // attach listeners
+            lbImg.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('pointercancel', onPointerUp);
+
+            // double click on image: toggle zoom in/out centered at click
+            lbImg.addEventListener('dblclick', function(e){
+                if(!lb.classList.contains('is-open')) return;
+                const rect = lbImg.getBoundingClientRect();
+                const cx = e.clientX - rect.left; // cursor pos in image coords
+                const cy = e.clientY - rect.top;
+                const prevScale = scale;
+                if(!isZoomed){
+                    // zoom in centered at cursor
+                    const TARGET_SCALE = 2; // default double-click zoom
+                    isZoomed = true;
+                    scale = Math.min(MAX_SCALE, TARGET_SCALE);
+                    // compute relative coordinates and adjust pan so cursor remains focused
+                    const relX = (cx - rect.width/2 - tx) / (prevScale || 1);
+                    const relY = (cy - rect.height/2 - ty) / (prevScale || 1);
+                    tx = tx - relX * (scale - prevScale);
+                    ty = ty - relY * (scale - prevScale);
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                } else {
+                    // reset to original
+                    isZoomed = false;
+                    scale = 1; tx = 0; ty = 0;
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                }
+                // suppress overlay click right after double-click to prevent accidental close
+                suppressOverlayClickUntil = Date.now() + 220;
+            });
+
+            // zoom toggle button
+            if(lbZoom) lbZoom.addEventListener('click', function(){
+                if(!lb.classList.contains('is-open')) return;
+                if(!isZoomed){
+                    isZoomed = true; scale = 2; tx = 0; ty = 0;
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                } else {
+                    isZoomed = false; scale = 1; tx = 0; ty = 0;
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                }
+            });
+
+            // ensure switching images resets zoom/pan state
+            const originalShow = showImageAt;
+            window.__showImageAt_orig = originalShow;
+            function wrappedShowImageAt(idx){
+                isZoomed = false; scale = 1; tx = 0; ty = 0;
+                originalShow(idx);
+                lbImg.style.transform = '';
+            }
+            window.showImageAt = wrappedShowImageAt;
+        })();
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

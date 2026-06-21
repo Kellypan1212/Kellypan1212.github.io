@@ -4,14 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>委託需知</title>
-    <link rel="stylesheet" href="lem.css">
-</head>
-<body>
-    <div id="site-nav"></div>
 
-    <main class="page-content">
-        <!-- 委託需知內容 -->
-    </main>
-    <script src="js/site.js"></script>
+    <link rel="stylesheet" href="lem.css">
+
+    <style>
+        body{
+            margin: 0;
+            background: #0f0f0f;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .page-content{
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1{
+            color: #ffc926;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 28px;
+            text-align: center;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeIn 0.36s ease both;
+            animation-delay: 0.04s;
+        }
+
+        .card{
+            margin-bottom: 22px;
+            text-align: center; /* 置中顯示整個卡片區塊 */
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.42s cubic-bezier(.2,.9,.2,1) both;
+        }
+
+        .title{
+            color: #ffc926;
+            font-size: clamp(1.15rem, 2.4vw, 1.6rem);
+            margin-bottom: 8px;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(6px);
+            animation: fadeIn 0.36s ease both;
+        }
+
+        .text{
+            white-space: pre-line;
+            line-height: 1.8;
+            color: #e6e6e6;
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            max-width: 760px;
+            margin: 0 auto; /* keep paragraph readable centered */
+            text-align: center;
+            opacity: 0;
+            transform: translateY(6px);
+            animation: fadeIn 0.38s ease both;
+        }
+
+        /* stagger card animations */
+        .card:nth-of-type(1){ animation-delay: 0.10s; }
+        .card:nth-of-type(2){ animation-delay: 0.18s; }
+        .card:nth-of-type(3){ animation-delay: 0.26s; }
+        .card:nth-of-type(4){ animation-delay: 0.34s; }
+        .card:nth-of-type(5){ animation-delay: 0.42s; }
+        .card:nth-of-type(6){ animation-delay: 0.50s; }
+        .card:nth-of-type(7){ animation-delay: 0.58s; }
+        .card:nth-of-type(8){ animation-delay: 0.66s; }
+        .card:nth-of-type(9){ animation-delay: 0.74s; }
+        .card:nth-of-type(10){ animation-delay: 0.82s; }
+        .card:nth-of-type(11){ animation-delay: 0.90s; }
+        .card:nth-of-type(12){ animation-delay: 0.98s; }
+
+        @keyframes fadeIn{
+            from{ opacity: 0; transform: translateY(10px); }
+            to{ opacity: 1; transform: translateY(0); }
+        }
+
+        /* accessibility: respect reduced motion */
+        @media (prefers-reduced-motion: reduce){
+            h1, .card, .title, .text { animation: none !important; opacity: 1; transform: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="site-nav"></div>
+
+<main class="page-content">
+
+    <h1>委託需知</h1>
+
+    <div class="card">
+        <div class="title">付款方式</div>
+        <div class="text">郵局匯款</div>
+    </div>
+
+    <div class="card">
+        <div class="title">流程</div>
+        <div class="text">確認設定 → 匯款 → 開始繪製 → 完成品交付</div>
+    </div>
+
+    <div class="card">
+        <div class="title">製作時間</div>
+        <div class="text">匯款後約需 1 天至 1 年的製作時間，期間可詢問進度。
+            如需急件請提前告知，需另行討論加急費用。</div>
+    </div>
+
+    <div class="card">
+        <div class="title">費用與規則</div>
+        <div class="text">非接稿期間可自帶預算私訊詢問是否接單
+            商用委託 ×3
+            加急 ×2
+
+            僅提供「驚喜包服務」
+            驚喜包不提供修改（除非設定繪製錯誤）
+            可許願，但不一定會畫到
+            接受挑設、挑衣服…有需要都可以詢問
+            作品可能會有溢色</div>
+    </div>
+
+    <div class="card">
+        <div class="title">需要提供的資訊</div>
+        <div class="text">請提供對 G 向內容的接受程度
+            （器官外露 / 濺血 / 角色死亡 / 完全不接受 G 向）</div>
+    </div>
+
+    <div class="card">
+        <div class="title">檔案格式</div>
+        <div class="text">若無特別要求，一律提供 PNG 檔</div>
+    </div>
+
+    <div class="card">
+        <div class="title">分期付款</div>
+        <div class="text">單筆金額超過 4000 元可分期付款
+            需全額付清後才會開始繪製</div>
+    </div>
+
+    <div class="card">
+        <div class="title">成品使用與公開</div>
+        <div class="text">成品會加浮水印並公開於社群平台
+            發布時請標註出處：
+            稀蝸 / cgouo_ / cgouo pa</div>
+    </div>
+
+    <div class="card">
+        <div class="title">非商用使用範圍</div>
+        <div class="text">可用於個人收藏、縮放、裁切，並在標註出處後發布使用</div>
+    </div>
+
+    <div class="card">
+        <div class="title">其他</div>
+        <div class="text">其他細節請私訊詢問</div>
+    </div>
+
+</main>
+
+<script src="js/site.js"></script>
 </body>
 </html>
