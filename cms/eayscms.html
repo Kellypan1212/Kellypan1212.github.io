@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
-    <title>吃人小夥伴</title>
+    <title>裸眼3D</title>
     <link rel="stylesheet" href="lem.css">
     <style>
         body {
@@ -416,12 +416,12 @@
     <div id="site-nav"></div>
 
     <main class="page-content headshot-page">
-        <section class="product-layout" aria-label="吃人小夥伴商品資訊">
+        <section class="product-layout" aria-label="裸眼3D商品資訊">
             <div class="product-left">
                 <div class="product-gallery">
                     <div class="image-stage">
                         <button class="product-image-button" type="button" id="productImageButton" aria-label="開啟圖片預覽">
-                            <img class="product-image" id="productImage" src="ph/commission/idk/IMG_5602.JPG" alt="吃人小夥伴委託範例">
+                            <img class="product-image" id="productImage" src="ph/commission/3d/IMG_6303.JPG" alt="裸眼3D委託範例">
                         </button>
                         <button class="gallery-control gallery-prev" type="button" id="galleryPrev" aria-label="上一張">‹</button>
                         <button class="gallery-control gallery-next" type="button" id="galleryNext" aria-label="下一張">›</button>
@@ -496,12 +496,12 @@
             </div>
 
             <div class="product-info">
-                <h1 class="product-title">吃人小夥伴</h1>
-                <div class="product-price">NT$2600</div>
+                <h1 class="product-title">裸眼3D</h1>
+                <div class="product-price">NT$詢價</div>
                 <div class="notice-copy price-extra" aria-label="價格補充">
                     <section class="notice-item">
                         <h2 class="notice-title">補充</h2>
-                        <p class="notice-text">限單人</p>
+                        <p class="notice-text">價格請私訊詢問</p>
                     </section>
                 </div>
 
@@ -559,21 +559,21 @@
                         <p class="recommendation-price">NT$2700</p>
                     </div>
                 </a>
+                <a class="recommendation-card" href="cms/eatcms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/idk/IMG_5602.JPG" alt="吃人小夥伴預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">吃人小夥伴</h3>
+                        <p class="recommendation-price">NT$2600</p>
+                    </div>
+                </a>
                 <a class="recommendation-card" href="cms/peepeecms.html">
                     <div class="recommendation-image">
                         <img src="ph/commission/pp/IMG_6362.JPG" alt="撇撇人預覽圖">
                     </div>
                     <div class="recommendation-info">
                         <h3 class="recommendation-title">撇撇人</h3>
-                        <p class="recommendation-price">NT$詢價</p>
-                    </div>
-                </a>
-                <a class="recommendation-card" href="cms/eayscms.html">
-                    <div class="recommendation-image">
-                        <img src="ph/commission/3d/IMG_6303.JPG" alt="裸眼3D預覽圖">
-                    </div>
-                    <div class="recommendation-info">
-                        <h3 class="recommendation-title">裸眼3D</h3>
                         <p class="recommendation-price">NT$詢價</p>
                     </div>
                 </a>
@@ -592,8 +592,21 @@
 
     <script>
         const productImages = [
-            "ph/commission/idk/IMG_5602.JPG",
-            "ph/commission/idk/IMG_5188.JPG"
+            'ph/commission/3d/IMG_6303.JPG',
+            'ph/commission/3d/IMG_5355.JPG',
+            'ph/commission/3d/IMG_5343.JPG',
+            'ph/commission/3d/IMG_5338.JPG',
+            'ph/commission/3d/IMG_5337.JPG',
+            'ph/commission/3d/IMG_5325.JPG',
+            'ph/commission/3d/IMG_5320.JPG',
+            'ph/commission/3d/IMG_5318.JPG',
+            'ph/commission/3d/IMG_5317.JPG',
+            'ph/commission/3d/IMG_5303.JPG',
+            'ph/commission/3d/IMG_5301.JPG',
+            'ph/commission/3d/IMG_5293.JPG',
+            'ph/commission/3d/IMG_5292.JPG',
+            'ph/commission/3d/IMG_5291.JPG',
+            'ph/commission/3d/IMG_5290.JPG'
         ];
 
         window.fanartImageList = productImages;
@@ -629,7 +642,7 @@
             productImage.style.transform = 'scale(0.97)';
             window.setTimeout(() => {
                 productImage.src = productImages[productIndex];
-                productImage.alt = `吃人小夥伴委託範例 ${productIndex + 1}`;
+                productImage.alt = `裸眼3D委託範例 ${productIndex + 1}`;
                 productImage.style.opacity = '1';
                 productImage.style.transform = '';
             }, 130);
@@ -681,7 +694,7 @@
             currentIndex = ((idx % list.length) + list.length) % list.length;
             isZoomed = false; scale = 1; tx = 0; ty = 0;
             lbImg.src = list[currentIndex];
-            lbImg.alt = `吃人小夥伴委託範例 ${currentIndex + 1}`;
+            lbImg.alt = `裸眼3D委託範例 ${currentIndex + 1}`;
             lbImg.style.width = '';
             lbImg.style.height = '';
             lbImg.style.transform = '';
@@ -833,7 +846,7 @@
                             lbImg.style.transition = 'none';
                             lbImg.style.transform = `translateX(${incomingX}px)`;
                             lbImg.src = list[currentIndex];
-                            lbImg.alt = `吃人小夥伴委託範例 ${currentIndex + 1}`;
+                            lbImg.alt = `裸眼3D委託範例 ${currentIndex + 1}`;
 
                             requestAnimationFrame(()=>{
                                 requestAnimationFrame(()=>{

@@ -222,6 +222,97 @@
             width: 210px;
         }
 
+        .product-recommendations {
+            margin-top: clamp(76px, 10vw, 132px);
+            padding-top: clamp(34px, 5vw, 54px);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .recommendation-heading {
+            margin: 0 0 22px;
+            color: #fff;
+            font-size: clamp(1.55rem, 3vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: clamp(16px, 2.4vw, 26px);
+        }
+
+        .recommendation-card {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: #202020;
+            color: #fff;
+            text-decoration: none;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .recommendation-card:hover,
+        .recommendation-card:focus-visible {
+            border-color: rgba(255, 201, 38, 0.78);
+            box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34);
+            transform: translateY(-4px);
+            outline: none;
+        }
+
+        .recommendation-image {
+            aspect-ratio: 1 / 1;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 24% 18%, rgba(255, 201, 38, 0.12), transparent 34%),
+                linear-gradient(145deg, #272727, #111 68%);
+        }
+
+        .recommendation-image img {
+            width: 100%;
+            height: 100%;
+            padding: 14px;
+            object-fit: contain;
+            filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.36));
+            box-sizing: border-box;
+            transition: transform 0.22s ease;
+        }
+
+        .recommendation-card:hover .recommendation-image img,
+        .recommendation-card:focus-visible .recommendation-image img {
+            transform: scale(1.035);
+        }
+
+        .recommendation-info {
+            min-height: 112px;
+            padding: 16px 16px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .recommendation-title {
+            margin: 0;
+            color: #fff;
+            font-size: 1.02rem;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .recommendation-price {
+            margin: 0;
+            color: #ffc926;
+            font-size: 1.08rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
         .lb-overlay{ position:fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition: opacity 0.28s ease; }
         .lb-overlay.is-open{ opacity:1; pointer-events:auto; }
         .lb-content{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; overflow:hidden; }
@@ -291,6 +382,18 @@
 
             .commission-action .cat-btn--large {
                 width: 100%;
+            }
+
+            .product-recommendations {
+                margin-top: 58px;
+            }
+
+            .recommendation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recommendation-info {
+                min-height: auto;
             }
 
             .lb-nav {
@@ -410,6 +513,74 @@
             </div>
         </section>
 
+        <section class="product-recommendations" aria-label="商品推薦">
+            <h2 class="recommendation-heading">其他商品</h2>
+            <div class="recommendation-grid">
+                <a class="recommendation-card" href="cms/qqcms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/Q/IMG_5421.JPG" alt="Q版預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">Q版</h3>
+                        <p class="recommendation-price">NT$250~450</p>
+                    </div>
+                </a>
+                <a class="recommendation-card" href="cms/alldaycms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/day/day1/全.jpg" alt="包天預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">包天</h3>
+                        <p class="recommendation-price">NT$6000~10000</p>
+                    </div>
+                </a>
+                <a class="recommendation-card" href="cms/goodartcms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/brinbrin/IMG_6120.JPG" alt="精緻插圖預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">精緻插圖</h3>
+                        <p class="recommendation-price">NT$6700</p>
+                    </div>
+                </a>
+                <a class="recommendation-card" href="cms/fishcms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/idk/IMG_6301.JPG" alt="摸魚頁預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">摸魚頁</h3>
+                        <p class="recommendation-price">NT$2700</p>
+                    </div>
+                </a>
+                <a class="recommendation-card" href="cms/eatcms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/idk/IMG_5602.JPG" alt="吃人小夥伴預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">吃人小夥伴</h3>
+                        <p class="recommendation-price">NT$2600</p>
+                    </div>
+                </a>
+                <a class="recommendation-card" href="cms/peepeecms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/pp/IMG_6362.JPG" alt="撇撇人預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">撇撇人</h3>
+                        <p class="recommendation-price">NT$詢價</p>
+                    </div>
+                </a>
+                <a class="recommendation-card" href="cms/eayscms.html">
+                    <div class="recommendation-image">
+                        <img src="ph/commission/3d/IMG_6303.JPG" alt="裸眼3D預覽圖">
+                    </div>
+                    <div class="recommendation-info">
+                        <h3 class="recommendation-title">裸眼3D</h3>
+                        <p class="recommendation-price">NT$詢價</p>
+                    </div>
+                </a>
+            </div>
+        </section>
         <div id="lightbox" class="lb-overlay" aria-hidden="true">
             <div class="lb-content" role="dialog" aria-modal="true">
                 <button class="lb-zoom" id="lbZoom" aria-label="縮放">🔍</button>
