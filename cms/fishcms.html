@@ -1,10 +1,741 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="../">
     <title>摸魚頁</title>
+    <link rel="stylesheet" href="lem.css">
+    <style>
+        body {
+            background: #1a1a1a;
+        }
+
+        .headshot-page {
+            width: min(100%, 1440px);
+            margin: 0 auto;
+            padding: clamp(34px, 6vw, 86px) var(--page-padding) clamp(64px, 8vw, 110px);
+        }
+
+        .product-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.8fr);
+            gap: clamp(42px, 7vw, 104px);
+            align-items: start;
+        }
+
+        .product-gallery {
+            position: sticky;
+            top: calc(var(--nav-height) + 34px);
+            min-width: 0;
+        }
+
+        .product-left {
+            min-width: 0;
+        }
+
+        .image-stage {
+            position: relative;
+            width: 100%;
+            min-height: min(70vh, 760px);
+            aspect-ratio: 1 / 1;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 8px;
+            background:
+                radial-gradient(circle at 24% 18%, rgba(255, 201, 38, 0.14), transparent 34%),
+                linear-gradient(145deg, #242424, #101010 68%);
+            box-shadow: 0 34px 72px rgba(0, 0, 0, 0.42);
+        }
+
+        .image-stage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .product-image-button {
+            width: 100%;
+            height: 100%;
+            padding: clamp(18px, 4vw, 54px);
+            border: 0;
+            background: transparent;
+            display: grid;
+            place-items: center;
+            cursor: zoom-in;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 28px 36px rgba(0, 0, 0, 0.45));
+            transform: scale(0.985);
+            transition: opacity 0.2s ease, transform 0.24s ease;
+        }
+
+        .product-image-button:hover .product-image,
+        .product-image-button:focus-visible .product-image {
+            transform: scale(1.01);
+        }
+
+        .gallery-control {
+            position: absolute;
+            top: 50%;
+            z-index: 2;
+            width: 46px;
+            height: 46px;
+            border: 0;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.44);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.38);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .gallery-control:hover,
+        .gallery-control:focus-visible {
+            color: #000;
+            background: #ffc926;
+            transform: translateY(-50%) scale(1.06);
+            outline: none;
+        }
+
+        .gallery-prev {
+            left: clamp(12px, 2.2vw, 24px);
+        }
+
+        .gallery-next {
+            right: clamp(12px, 2.2vw, 24px);
+        }
+
+        .gallery-dots {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .gallery-dot {
+            width: 9px;
+            height: 9px;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.64);
+            border-radius: 999px;
+            background: transparent;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .gallery-dot:hover,
+        .gallery-dot:focus-visible {
+            border-color: #ffc926;
+            transform: scale(1.2);
+            outline: none;
+        }
+
+        .gallery-dot.is-active {
+            border-color: #ffc926;
+            background: #ffc926;
+        }
+
+        .product-info {
+            padding-top: clamp(8px, 3vw, 46px);
+            text-align: left;
+        }
+
+        .product-kicker {
+            margin: 0 0 12px;
+            color: #ff453a;
+            font-size: clamp(0.82rem, 1.5vw, 0.95rem);
+            font-weight: 700;
+            letter-spacing: 0.16em;
+        }
+
+        .product-title {
+            margin: 0;
+            color: #fff;
+            font-size: clamp(3.25rem, 9vw, 6.7rem);
+            font-weight: 700;
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .product-price {
+            margin: clamp(12px, 2vw, 18px) 0 clamp(28px, 4vw, 46px);
+            color: #ffc926;
+            font-size: clamp(2.7rem, 7vw, 5.3rem);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .notice-copy {
+            max-width: 720px;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: clamp(0.88rem, 1.35vw, 0.98rem);
+            line-height: 1.85;
+        }
+
+        .product-notice {
+            margin-top: clamp(76px, 10vw, 132px);
+        }
+
+        .notice-item {
+            padding: 19px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .notice-item:first-child {
+            padding-top: 0;
+            border-top: 0;
+        }
+
+        .notice-title {
+            margin: 0 0 7px;
+            color: #ffc926;
+            font-size: 0.98rem;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .notice-text {
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        .commission-action {
+            margin-top: clamp(28px, 5vw, 48px);
+        }
+
+        .commission-action .cat-btn--large {
+            width: 210px;
+        }
+
+        .lb-overlay{ position:fixed; inset:0; background: rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition: opacity 0.28s ease; }
+        .lb-overlay.is-open{ opacity:1; pointer-events:auto; }
+        .lb-content{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; overflow:hidden; }
+        .lb-image.no-transition { transition: none !important; }
+        .lb-content .lb-image{ position:relative; left:auto; top:auto; will-change: auto; max-width: calc(100% - 40px); max-height: calc(100% - 40px); }
+        .lb-image{ display:block; width:auto; height:auto; max-width:100%; max-height:100%; box-shadow: 0 30px 60px rgba(0,0,0,0.6); transition: transform 0.16s ease; transform-origin: center center; }
+        .lb-image.zoomed{ transform: scale(2); }
+        .lb-close{ position:fixed; top:18px; right:18px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:18px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1002; }
+        .lb-close:hover{ transform: translateY(-4px); }
+        .lb-zoom{ position:fixed; top:18px; right:72px; background: rgba(255,255,255,0.06); color:#fff; border:0; padding:8px 10px; font-size:16px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); z-index:1002; }
+        .lb-zoom:hover{ transform: translateY(-4px); }
+        .lb-nav{ position:fixed; top:50%; transform:translateY(-50%); background: rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.08); width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:28px; z-index:1001; cursor:pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+        .lb-nav:hover{ background: rgba(255,255,255,0.16); color:#000; border-color: rgba(255,255,255,0.18); }
+        .lb-prev{ left:22px; }
+        .lb-next{ right:22px; }
+
+        @media (max-width: 980px) {
+            .product-layout {
+                grid-template-columns: 1fr;
+                gap: clamp(34px, 8vw, 58px);
+            }
+
+            .product-gallery {
+                position: relative;
+                top: auto;
+            }
+
+            .image-stage {
+                min-height: auto;
+                aspect-ratio: 1 / 1;
+            }
+
+            .product-info {
+                padding-top: 0;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .headshot-page {
+                padding-top: 28px;
+            }
+
+            .image-stage {
+                border-radius: 8px;
+            }
+
+            .product-image-button {
+                padding: 14px;
+            }
+
+            .gallery-control {
+                width: 40px;
+                height: 40px;
+            }
+
+            .product-title {
+                font-size: clamp(3rem, 18vw, 4.5rem);
+            }
+
+            .product-price {
+                font-size: clamp(2.4rem, 14vw, 3.8rem);
+            }
+
+            .notice-copy {
+                font-size: 0.9rem;
+            }
+
+            .commission-action .cat-btn--large {
+                width: 100%;
+            }
+
+            .lb-nav {
+                width: 46px;
+                height: 46px;
+                font-size: 24px;
+            }
+
+            .lb-prev {
+                left: 10px;
+            }
+
+            .lb-next {
+                right: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div id="site-nav"></div>
 
+    <main class="page-content headshot-page">
+        <section class="product-layout" aria-label="摸魚頁商品資訊">
+            <div class="product-left">
+                <div class="product-gallery">
+                    <div class="image-stage">
+                        <button class="product-image-button" type="button" id="productImageButton" aria-label="開啟圖片預覽">
+                            <img class="product-image" id="productImage" src="ph/commission/idk/IMG_6301.JPG" alt="摸魚頁委託範例">
+                        </button>
+                        <button class="gallery-control gallery-prev" type="button" id="galleryPrev" aria-label="上一張">‹</button>
+                        <button class="gallery-control gallery-next" type="button" id="galleryNext" aria-label="下一張">›</button>
+                    </div>
+                    <div class="gallery-dots" id="galleryDots" aria-label="圖片輪播分頁"></div>
+                </div>
+
+                <div class="notice-copy product-notice" aria-label="委託須知">
+                    <section class="notice-item">
+                        <h2 class="notice-title">付款方式</h2>
+                        <p class="notice-text">郵局匯款</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">流程</h2>
+                        <p class="notice-text">確認設定 → 匯款 → 開始繪製 → 完成品交付</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">製作時間</h2>
+                        <p class="notice-text">匯款後約需 1 天至 1 年的製作時間，期間可詢問進度。
+如需急件請提前告知，需另行討論加急費用。</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">費用與規則</h2>
+                        <p class="notice-text">非接稿期間可自帶預算私訊詢問是否接單
+商用委託 ×3
+加急 ×2
+
+僅提供「驚喜包服務」
+驚喜包不提供修改（除非設定繪製錯誤）
+可許願，但不一定會畫到
+接受挑設、挑衣服…有需要都可以詢問
+作品可能會有溢色</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">需要提供的資訊</h2>
+                        <p class="notice-text">請提供對 G 向內容的接受程度
+（器官外露 / 濺血 / 角色死亡 / 完全不接受 G 向）</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">檔案格式</h2>
+                        <p class="notice-text">若無特別要求，一律提供 PNG 檔</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">分期付款</h2>
+                        <p class="notice-text">單筆金額超過 4000 元可分期付款
+需全額付清後才會開始繪製</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">成品使用與公開</h2>
+                        <p class="notice-text">成品會加浮水印並公開於社群平台
+發布時請標註出處：
+稀蝸 / cgouo_ / cgouo pa</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">非商用使用範圍</h2>
+                        <p class="notice-text">可用於個人收藏、縮放、裁切，並在標註出處後發布使用</p>
+                    </section>
+
+                    <section class="notice-item">
+                        <h2 class="notice-title">其他</h2>
+                        <p class="notice-text">其他細節請私訊詢問</p>
+                    </section>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h1 class="product-title">摸魚頁</h1>
+                <div class="product-price">NT$2700</div>
+                <div class="notice-copy price-extra" aria-label="價格補充">
+                    <section class="notice-item">
+                        <h2 class="notice-title">補充</h2>
+                        <p class="notice-text">限單人
+                        挑設</p>
+                    </section>
+                </div>
+
+                <p class="commission-action">
+                    <a class="cat-btn cat-btn--large" href="https://www.facebook.com/cgouo.pa/?rdid=EVFegre5W4eUPr10" target="_blank" rel="noopener">我要委託 <span class="btn-arrow" aria-hidden="true">➜</span></a>
+                </p>
+            </div>
+        </section>
+
+        <div id="lightbox" class="lb-overlay" aria-hidden="true">
+            <div class="lb-content" role="dialog" aria-modal="true">
+                <button class="lb-zoom" id="lbZoom" aria-label="縮放">🔍</button>
+                <button class="lb-close" id="lbClose" aria-label="關閉">✕</button>
+                <img src="" alt="預覽圖片" id="lbImage" class="lb-image">
+            </div>
+            <button class="lb-nav lb-prev" id="lbPrev" aria-label="上一張">‹</button>
+            <button class="lb-nav lb-next" id="lbNext" aria-label="下一張">›</button>
+        </div>
+    </main>
+
+    <script>
+        const productImages = [
+            "ph/commission/idk/IMG_6301.JPG",
+            "ph/commission/idk/IMG_4834.JPG",
+            "ph/commission/idk/1141117.jpg"
+        ];
+
+        window.fanartImageList = productImages;
+
+        const productImage = document.getElementById('productImage');
+        const productImageButton = document.getElementById('productImageButton');
+        const galleryPrev = document.getElementById('galleryPrev');
+        const galleryNext = document.getElementById('galleryNext');
+        const galleryDots = document.getElementById('galleryDots');
+        let productIndex = 0;
+        const dotButtons = productImages.map((_, idx) => {
+            const dot = document.createElement('button');
+            dot.className = 'gallery-dot';
+            dot.type = 'button';
+            dot.setAttribute('aria-label', `顯示第 ${idx + 1} 張圖片`);
+            dot.addEventListener('click', () => setProductImage(idx));
+            galleryDots.appendChild(dot);
+            return dot;
+        });
+
+        function updateGalleryDots() {
+            dotButtons.forEach((dot, idx) => {
+                const isActive = idx === productIndex;
+                dot.classList.toggle('is-active', isActive);
+                dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+            });
+        }
+
+        function setProductImage(idx) {
+            productIndex = ((idx % productImages.length) + productImages.length) % productImages.length;
+            updateGalleryDots();
+            productImage.style.opacity = '0';
+            productImage.style.transform = 'scale(0.97)';
+            window.setTimeout(() => {
+                productImage.src = productImages[productIndex];
+                productImage.alt = `摸魚頁委託範例 ${productIndex + 1}`;
+                productImage.style.opacity = '1';
+                productImage.style.transform = '';
+            }, 130);
+        }
+
+        updateGalleryDots();
+
+        galleryPrev.addEventListener('click', () => setProductImage(productIndex - 1));
+        galleryNext.addEventListener('click', () => setProductImage(productIndex + 1));
+        productImageButton.addEventListener('click', () => openLightboxByIndex(productIndex));
+
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImage');
+        const lbClose = document.getElementById('lbClose');
+        const lbZoom = document.getElementById('lbZoom');
+        let isZoomed = false;
+        let scale = 1;
+        let tx = 0, ty = 0;
+        const MIN_SCALE = 1;
+        const MAX_SCALE = 4;
+        let suppressOverlayClickUntil = 0;
+
+        function closeLightbox(){
+            lb.classList.remove('is-open');
+            lb.setAttribute('aria-hidden','true');
+            lbImg.src = '';
+            lbImg.style.width = '';
+            lbImg.style.height = '';
+            lbImg.style.transform = '';
+            document.body.style.overflow = '';
+            currentIndex = -1;
+        }
+
+        lbClose.addEventListener('click', closeLightbox);
+        lb.addEventListener('click', (e)=>{
+            if(Date.now() < suppressOverlayClickUntil) return;
+            const t = e.target;
+            if(t === lbImg) return;
+            if(t === lbClose) return;
+            if(t === lbZoom) return;
+            if(t.closest && t.closest('.lb-nav')) return;
+            closeLightbox();
+        });
+
+        let currentIndex = -1;
+        function showImageAt(idx){
+            const list = window.fanartImageList || [];
+            if(!list || list.length === 0) return;
+            currentIndex = ((idx % list.length) + list.length) % list.length;
+            isZoomed = false; scale = 1; tx = 0; ty = 0;
+            lbImg.src = list[currentIndex];
+            lbImg.alt = `摸魚頁委託範例 ${currentIndex + 1}`;
+            lbImg.style.width = '';
+            lbImg.style.height = '';
+            lbImg.style.transform = '';
+        }
+
+        function openLightboxByIndex(idx){
+            showImageAt(idx);
+            lb.classList.add('is-open');
+            lb.setAttribute('aria-hidden','false');
+            document.body.style.overflow = 'hidden';
+            lbClose.focus();
+        }
+
+        const lbPrev = document.getElementById('lbPrev');
+        const lbNext = document.getElementById('lbNext');
+        if(lbPrev) lbPrev.addEventListener('click', (e)=>{ e.stopPropagation(); const list = window.fanartImageList || []; if(list.length===0) return; currentIndex = (currentIndex - 1 + list.length) % list.length; showImageAt(currentIndex); });
+        if(lbNext) lbNext.addEventListener('click', (e)=>{ e.stopPropagation(); const list = window.fanartImageList || []; if(list.length===0) return; currentIndex = (currentIndex + 1) % list.length; showImageAt(currentIndex); });
+
+        document.addEventListener('keydown', (e)=>{
+            if(!lb.classList.contains('is-open')) return;
+            if(e.key === 'Escape') { closeLightbox(); return; }
+            const list = window.fanartImageList || [];
+            if(list.length === 0) return;
+            if(e.key === 'ArrowLeft'){
+                currentIndex = (currentIndex - 1 + list.length) % list.length;
+                showImageAt(currentIndex);
+            } else if(e.key === 'ArrowRight'){
+                currentIndex = (currentIndex + 1) % list.length;
+                showImageAt(currentIndex);
+            }
+        });
+
+        (function(){
+            let wheelLocked = false;
+            const THROTTLE_MS = 160;
+
+            function applyTransform(){
+                if(isZoomed && scale !== 1){
+                    lbImg.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+                } else {
+                    lbImg.style.transform = '';
+                }
+            }
+
+            lb.addEventListener('wheel', function(e){
+                if(!lb.classList.contains('is-open')) return;
+                const list = window.fanartImageList || [];
+                if(isZoomed){
+                    e.preventDefault();
+                    const rect = lbImg.getBoundingClientRect();
+                    const cx = e.clientX - rect.left;
+                    const cy = e.clientY - rect.top;
+                    const prevScale = scale;
+                    const delta = -e.deltaY;
+                    const Z_STEP = 0.12;
+                    if(delta > 0) scale = Math.min(MAX_SCALE, +(scale + Z_STEP).toFixed(3));
+                    else scale = Math.max(MIN_SCALE, +(scale - Z_STEP).toFixed(3));
+
+                    const relX = (cx - rect.width/2 - tx) / prevScale;
+                    const relY = (cy - rect.height/2 - ty) / prevScale;
+                    tx = tx - relX * (scale - prevScale);
+                    ty = ty - relY * (scale - prevScale);
+
+                    applyTransform();
+                    return;
+                }
+
+                e.preventDefault();
+                if(wheelLocked) return;
+                const delta = e.deltaY;
+                if(Math.abs(delta) < 2) return;
+                if(list.length === 0) return;
+                if(delta > 0){ currentIndex = (currentIndex + 1) % list.length; }
+                else { currentIndex = (currentIndex - 1 + list.length) % list.length; }
+                showImageAt(currentIndex);
+                wheelLocked = true;
+                setTimeout(()=>{ wheelLocked = false; }, THROTTLE_MS);
+            }, { passive: false });
+
+            lbImg.ondragstart = () => false;
+
+            let pointerActive = false;
+            let pId = null;
+            let startX = 0, startY = 0;
+            let lastTx = 0, lastTy = 0;
+            let dx = 0, dy = 0;
+            const SWIPE_THRESHOLD = Math.max(120, Math.round(window.innerWidth * 0.12));
+
+            function onPointerDown(e){
+                if(!lb.classList.contains('is-open')) return;
+                if(e.pointerType === 'mouse' && e.button !== 0) return;
+                pId = e.pointerId;
+                pointerActive = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                dx = 0; dy = 0;
+                try{ e.target.setPointerCapture(pId); }catch(_){ }
+
+                if(isZoomed && scale > 1){
+                    lastTx = tx; lastTy = ty;
+                    lbImg.classList.add('no-transition');
+                    lbImg.style.cursor = 'grabbing';
+                } else {
+                    lbImg.classList.add('no-transition');
+                }
+            }
+
+            function onPointerMove(e){
+                if(!pointerActive || e.pointerId !== pId) return;
+                dx = e.clientX - startX;
+                dy = e.clientY - startY;
+                if(isZoomed && scale > 1){
+                    tx = lastTx + dx;
+                    ty = lastTy + dy;
+                    applyTransform();
+                } else {
+                    const max = window.innerWidth * 1.2;
+                    const txVis = Math.max(Math.min(dx, max), -max);
+                    lbImg.style.transform = `translateX(${txVis}px)`;
+                }
+            }
+
+            function onPointerUp(e){
+                if(!pointerActive || e.pointerId !== pId) return;
+                pointerActive = false;
+                try{ e.target.releasePointerCapture(pId); }catch(_){ }
+                lbImg.classList.remove('no-transition');
+                lbImg.style.cursor = '';
+
+                if(isZoomed && scale > 1){
+                    suppressOverlayClickUntil = Date.now() + 150;
+                    return;
+                }
+
+                const absdx = Math.abs(dx);
+                if(absdx > SWIPE_THRESHOLD){
+                    const swipedLeft = dx < 0;
+                    const list = window.fanartImageList || [];
+                    if(list.length > 0){
+                        const outX = swipedLeft ? -window.innerWidth : window.innerWidth;
+                        lbImg.style.transition = 'transform 0.16s ease';
+                        lbImg.style.transform = `translateX(${outX}px)`;
+
+                        setTimeout(()=>{
+                            if(swipedLeft) currentIndex = (currentIndex + 1) % list.length;
+                            else currentIndex = (currentIndex - 1 + list.length) % list.length;
+
+                            const incomingX = swipedLeft ? window.innerWidth : -window.innerWidth;
+                            lbImg.style.transition = 'none';
+                            lbImg.style.transform = `translateX(${incomingX}px)`;
+                            lbImg.src = list[currentIndex];
+                            lbImg.alt = `摸魚頁委託範例 ${currentIndex + 1}`;
+
+                            requestAnimationFrame(()=>{
+                                requestAnimationFrame(()=>{
+                                    lbImg.style.transition = 'transform 0.16s ease';
+                                    lbImg.style.transform = '';
+                                });
+                            });
+
+                            setTimeout(()=>{ lbImg.style.transition = ''; }, 220);
+                        }, 160);
+
+                        suppressOverlayClickUntil = Date.now() + 300;
+                    }
+                } else {
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    lbImg.style.transform = '';
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                    suppressOverlayClickUntil = Date.now() + 160;
+                }
+
+                dx = dy = 0; pId = null;
+            }
+
+            lbImg.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('pointercancel', onPointerUp);
+
+            lbImg.addEventListener('dblclick', function(e){
+                if(!lb.classList.contains('is-open')) return;
+                const rect = lbImg.getBoundingClientRect();
+                const cx = e.clientX - rect.left;
+                const cy = e.clientY - rect.top;
+                const prevScale = scale;
+                if(!isZoomed){
+                    const TARGET_SCALE = 2;
+                    isZoomed = true;
+                    scale = Math.min(MAX_SCALE, TARGET_SCALE);
+                    const relX = (cx - rect.width/2 - tx) / (prevScale || 1);
+                    const relY = (cy - rect.height/2 - ty) / (prevScale || 1);
+                    tx = tx - relX * (scale - prevScale);
+                    ty = ty - relY * (scale - prevScale);
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                } else {
+                    isZoomed = false;
+                    scale = 1; tx = 0; ty = 0;
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                }
+                suppressOverlayClickUntil = Date.now() + 220;
+            });
+
+            if(lbZoom) lbZoom.addEventListener('click', function(){
+                if(!lb.classList.contains('is-open')) return;
+                if(!isZoomed){
+                    isZoomed = true; scale = 2; tx = 0; ty = 0;
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                } else {
+                    isZoomed = false; scale = 1; tx = 0; ty = 0;
+                    lbImg.style.transition = 'transform 0.12s ease';
+                    applyTransform();
+                    setTimeout(()=>{ lbImg.style.transition = ''; }, 160);
+                }
+            });
+        })();
+    </script>
+    <script src="js/site.js"></script>
 </body>
 </html>
